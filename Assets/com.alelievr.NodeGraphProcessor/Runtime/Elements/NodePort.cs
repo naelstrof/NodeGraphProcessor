@@ -305,7 +305,7 @@ public class NodePort {
         // Only one input connection is handled by this code, if you want to
         // take multiple inputs, you must create a custom input function see CustomPortsNode.cs
         if (edges.Count > 0) {
-            var passThroughObject = edges.First().passThroughBuffer;
+            var passThroughObject = edges[0].passThroughBuffer;
 
             // We do an extra convertion step in case the buffer output is not compatible with the input port
             if (passThroughObject != null)
