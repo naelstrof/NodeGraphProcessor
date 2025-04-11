@@ -40,11 +40,8 @@ public static class CustomPortIO {
                     continue;
 
                 var p = method.GetParameters();
-                var nodePortSignature = false;
-
                 // Check if the function can take a NodePort in optional param
-                if (p.Length == 2 && p[1].ParameterType == typeof(NodePort))
-                    nodePortSignature = true;
+                bool nodePortSignature = p.Length == 2 && p[1].ParameterType == typeof(NodePort);
 
                 CustomPortIODelegate deleg;
 #if ENABLE_IL2CPP
@@ -95,15 +92,12 @@ public static class CustomPortIO {
     }
 
     public static CustomPortIODelegate GetCustomPortMethod(Type nodeType, string fieldName) {
-        PortIOPerField portIOPerField;
-        CustomPortIODelegate deleg;
-
-        customIOPortMethods.TryGetValue(nodeType, out portIOPerField);
+        customIOPortMethods.TryGetValue(nodeType, out var portIOPerField);
 
         if (portIOPerField == null)
             return null;
 
-        portIOPerField.TryGetValue(fieldName, out deleg);
+        portIOPerField.TryGetValue(fieldName, out var deleg);
 
         return deleg;
     }
@@ -123,9 +117,7 @@ public static class CustomPortIO {
     }
 
     public static bool IsAssignable(Type input, Type output) {
-        if (assignableTypes.ContainsKey(input))
-            return assignableTypes[input].Contains(output);
-        return false;
+        return assignableTypes.TryGetValue(input, out var types) && types.Contains(output);
     }
 }
 }
