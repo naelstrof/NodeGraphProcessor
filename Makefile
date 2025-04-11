@@ -1,2 +1,2 @@
 deploy:
-	git subtree push --prefix Assets/com.alelievr.NodeGraphProcessor origin upm
+	git subtree push --prefix Packages/com.alelievr.NodeGraphProcessor origin upm
