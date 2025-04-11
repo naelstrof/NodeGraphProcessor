@@ -1,0 +1,3 @@
+[submodule "Packages/com.naelstrof.orbitcam"]
+	path = Packages/com.naelstrof.orbitcam
+	url = https://github.com/naelstrof/com.naelstrof.orbitcam.git

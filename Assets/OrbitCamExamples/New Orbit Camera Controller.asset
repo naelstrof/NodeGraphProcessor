@@ -1,0 +1,248 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 083b6956da1aab945b40dc74109f7b5f, type: 3}
+  m_Name: New Orbit Camera Controller
+  m_EditorClassIdentifier: 
+  serializedNodes: []
+  nodes:
+  - rid: 7165158007928520704
+  - rid: 7165158007928520705
+  - rid: 7165158007928520706
+  - rid: 7165158007928520707
+  - rid: 7165158007928520708
+  - rid: 7165158007928520709
+  edges:
+  - GUID: 1b89ac1f-b6aa-4fb9-a07d-81897050e319
+    owner: {fileID: 11400000}
+    inputNodeGUID: 9ebbd9e5-1be2-4c04-ae43-feb4157ab6e1
+    outputNodeGUID: f117a12e-732f-4a89-b9bb-8d0441c6a4e1
+    inputFieldName: inputA
+    outputFieldName: output
+    inputPortIdentifier: 
+    outputPortIdentifier: 
+  - GUID: ab62540e-633a-4fda-a061-f5d705948b64
+    owner: {fileID: 11400000}
+    inputNodeGUID: 9ebbd9e5-1be2-4c04-ae43-feb4157ab6e1
+    outputNodeGUID: ced3fcf6-6215-4cce-a35e-cef7f6174903
+    inputFieldName: blend
+    outputFieldName: value
+    inputPortIdentifier: 
+    outputPortIdentifier: 
+  - GUID: d3770cfa-2b61-495e-9aaa-e03243d3f5cf
+    owner: {fileID: 11400000}
+    inputNodeGUID: 9ebbd9e5-1be2-4c04-ae43-feb4157ab6e1
+    outputNodeGUID: 59d3f202-3a06-4997-bdf8-228f3001f102
+    inputFieldName: inputB
+    outputFieldName: output
+    inputPortIdentifier: 
+    outputPortIdentifier: 
+  - GUID: 69c4cbd2-594c-4745-b301-fcbf71149010
+    owner: {fileID: 11400000}
+    inputNodeGUID: 07bc7d7e-04c8-4d83-aaad-aa2b4a30d381
+    outputNodeGUID: 9ebbd9e5-1be2-4c04-ae43-feb4157ab6e1
+    inputFieldName: input
+    outputFieldName: output
+    inputPortIdentifier: 
+    outputPortIdentifier: 
+  - GUID: c19e0427-327b-45b0-b356-1a017e35e2e6
+    owner: {fileID: 11400000}
+    inputNodeGUID: f117a12e-732f-4a89-b9bb-8d0441c6a4e1
+    outputNodeGUID: b57eb98a-df32-4818-b9f3-a8ed73d7e5a4
+    inputFieldName: rotation
+    outputFieldName: value
+    inputPortIdentifier: 
+    outputPortIdentifier: 
+  - GUID: 934247bd-015f-4087-8e3b-3ef6c3bd9715
+    owner: {fileID: 11400000}
+    inputNodeGUID: 59d3f202-3a06-4997-bdf8-228f3001f102
+    outputNodeGUID: b57eb98a-df32-4818-b9f3-a8ed73d7e5a4
+    inputFieldName: rotation
+    outputFieldName: value
+    inputPortIdentifier: 
+    outputPortIdentifier: 
+  groups: []
+  stackNodes: []
+  pinnedElements: []
+  exposedParameters: []
+  serializedParameterList: []
+  stickyNotes: []
+  nodeInspectorReference: {fileID: 0}
+  position: {x: 456, y: -258, z: 0}
+  scale: {x: 1, y: 1, z: 1}
+  references:
+    version: 2
+    RefIds:
+    - rid: 7165158007928520704
+      type: {class: OrbitCameraOutput, ns: , asm: com.naelstrof.orbitcam}
+      data:
+        nodeCustomName: 
+        GUID: 07bc7d7e-04c8-4d83-aaad-aa2b4a30d381
+        computeOrder: 5
+        position:
+          serializedVersion: 2
+          x: 65
+          y: 301
+          width: 100
+          height: 100
+        expanded: 0
+        debug: 0
+        nodeLock: 0
+        input:
+          position: {x: 0, y: 0, z: 0}
+          distance: 1
+          fov: 65
+          screenPoint: {x: 0.5, y: 0.5}
+          rotation: {x: 0, y: 0, z: 0, w: 1}
+          cullingMask:
+            serializedVersion: 2
+            m_Bits: 4294967295
+    - rid: 7165158007928520705
+      type: {class: OrbitCameraDataConstant, ns: , asm: com.naelstrof.orbitcam}
+      data:
+        nodeCustomName: 
+        GUID: f117a12e-732f-4a89-b9bb-8d0441c6a4e1
+        computeOrder: 3
+        position:
+          serializedVersion: 2
+          x: -566
+          y: 166
+          width: 255
+          height: 190
+        expanded: 0
+        debug: 0
+        nodeLock: 0
+        pivotPosition: {x: 0, y: 0, z: 0}
+        screenOffset: {x: 0.5, y: 0.5}
+        desiredDistanceFromPivot: 1
+        fov: 65
+        rotation: {x: 0, y: 0, z: 0, w: 1}
+        cullingMask:
+          serializedVersion: 2
+          m_Bits: 4294967295
+        output:
+          position: {x: 0, y: 0, z: 0}
+          distance: 1
+          fov: 65
+          screenPoint: {x: 0.5, y: 0.5}
+          rotation: {x: 0, y: 0, z: 0, w: 1}
+          cullingMask:
+            serializedVersion: 2
+            m_Bits: 4294967295
+    - rid: 7165158007928520706
+      type: {class: OrbitCameraLerp, ns: , asm: com.naelstrof.orbitcam}
+      data:
+        nodeCustomName: 
+        GUID: 9ebbd9e5-1be2-4c04-ae43-feb4157ab6e1
+        computeOrder: 4
+        position:
+          serializedVersion: 2
+          x: -126.93747
+          y: 314.5
+          width: 140
+          height: 123
+        expanded: 0
+        debug: 0
+        nodeLock: 0
+        inputA:
+          position: {x: 0, y: 0, z: 0}
+          distance: 1
+          fov: 65
+          screenPoint: {x: 0.5, y: 0.5}
+          rotation: {x: 0, y: 0, z: 0, w: 1}
+          cullingMask:
+            serializedVersion: 2
+            m_Bits: 4294967295
+        inputB:
+          position: {x: 0, y: 1, z: 0}
+          distance: 1
+          fov: 65
+          screenPoint: {x: 0.5, y: 0.5}
+          rotation: {x: 0, y: 0, z: 0, w: 1}
+          cullingMask:
+            serializedVersion: 2
+            m_Bits: 4294967295
+        blend: -1.75
+        output:
+          position: {x: 0, y: 0, z: 0}
+          distance: 1
+          fov: 65
+          screenPoint: {x: 0.5, y: 0.5}
+          rotation: {x: 0, y: 0, z: 0, w: 1}
+          cullingMask:
+            serializedVersion: 2
+            m_Bits: 4294967295
+    - rid: 7165158007928520707
+      type: {class: OrbitCameraDataConstant, ns: , asm: com.naelstrof.orbitcam}
+      data:
+        nodeCustomName: 
+        GUID: 59d3f202-3a06-4997-bdf8-228f3001f102
+        computeOrder: 2
+        position:
+          serializedVersion: 2
+          x: -566
+          y: 376
+          width: 255
+          height: 190
+        expanded: 0
+        debug: 0
+        nodeLock: 0
+        pivotPosition: {x: 0, y: 1, z: 0}
+        screenOffset: {x: 0.5, y: 0.5}
+        desiredDistanceFromPivot: 1
+        fov: 65
+        rotation: {x: 0, y: 0, z: 0, w: 1}
+        cullingMask:
+          serializedVersion: 2
+          m_Bits: 4294967295
+        output:
+          position: {x: 0, y: 1, z: 0}
+          distance: 1
+          fov: 65
+          screenPoint: {x: 0.5, y: 0.5}
+          rotation: {x: 0, y: 0, z: 0, w: 1}
+          cullingMask:
+            serializedVersion: 2
+            m_Bits: 4294967295
+    - rid: 7165158007928520708
+      type: {class: OrbitCameraFloat, ns: , asm: com.naelstrof.orbitcam}
+      data:
+        nodeCustomName: 
+        GUID: ced3fcf6-6215-4cce-a35e-cef7f6174903
+        computeOrder: 0
+        position:
+          serializedVersion: 2
+          x: -310.99997
+          y: 589.55634
+          width: 151
+          height: 113
+        expanded: 0
+        debug: 0
+        nodeLock: 0
+        parameterName: blend
+        value: -1.75
+    - rid: 7165158007928520709
+      type: {class: OrbitCameraRotation, ns: , asm: com.naelstrof.orbitcam}
+      data:
+        nodeCustomName: 
+        GUID: b57eb98a-df32-4818-b9f3-a8ed73d7e5a4
+        computeOrder: 1
+        position:
+          serializedVersion: 2
+          x: -1029.504
+          y: 356
+          width: 181
+          height: 189
+        expanded: 0
+        debug: 0
+        nodeLock: 0
+        parameterName: rot
+        value: {x: 0, y: 0, z: 0, w: 1}

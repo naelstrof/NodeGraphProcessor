@@ -597,7 +597,15 @@ public abstract class BaseNode {
     public void OnProcess() {
         inputPorts.PullDatas();
 
-        ExceptionToLog.Call(Process);
+#if UNITY_EDITOR
+        try {
+#endif
+            Process();
+#if UNITY_EDITOR
+        } catch (Exception e) {
+            Debug.LogException(e);
+        }
+#endif
 
         InvokeOnProcessed();
 
