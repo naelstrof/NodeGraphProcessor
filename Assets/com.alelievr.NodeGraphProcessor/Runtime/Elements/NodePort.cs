@@ -347,9 +347,7 @@ public abstract class NodePortContainer : List<NodePort> {
         if (string.IsNullOrEmpty(portIdentifier))
             portIdentifier = null;
 
-        var port = this.FirstOrDefault(p => {
-            return p.fieldName == portFieldName && p.portData.identifier == portIdentifier;
-        });
+        var port = this.FirstOrDefault(p => p.fieldName == portFieldName && p.portData.identifier == portIdentifier);
 
         if (port == null) {
             Debug.LogError("The edge can't be properly connected because it's ports can't be found");
