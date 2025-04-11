@@ -366,7 +366,10 @@ public class NodeInputPortContainer : NodePortContainer {
     }
 
     public void PullDatas() {
-        ForEach(p => p.PullData());
+        var count = Count;
+        for (int i = 0; i < count; i++) {
+            this[i].PullData();
+        }
     }
 }
 
@@ -376,7 +379,10 @@ public class NodeOutputPortContainer : NodePortContainer {
     }
 
     public void PushDatas() {
-        ForEach(p => p.PushData());
+        var count = Count;
+        for (int i = 0; i < count; i++) {
+            this[i].PushData();
+        }
     }
 }
 }
