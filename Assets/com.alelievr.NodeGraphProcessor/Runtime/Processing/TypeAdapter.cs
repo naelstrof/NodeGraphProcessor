@@ -48,8 +48,7 @@ public static class TypeAdapter {
                 if (type.IsAbstract)
                     continue;
 
-                var adapter = Activator.CreateInstance(type) as ITypeAdapter;
-                if (adapter != null)
+                if (Activator.CreateInstance(type) is ITypeAdapter adapter)
                     foreach (var types in adapter.GetIncompatibleTypes()) {
                         incompatibleTypes.Add((types.Item1, types.Item2));
                         incompatibleTypes.Add((types.Item2, types.Item1));
@@ -59,12 +58,12 @@ public static class TypeAdapter {
                                                        BindingFlags.NonPublic)) {
                     if (method.GetParameters().Length != 1) {
                         Debug.LogError(
-                            $"Ignoring convertion method {method} because it does not have exactly one parameter");
+                            $"Ignoring conversion method {method} because it does not have exactly one parameter");
                         continue;
                     }
 
                     if (method.ReturnType == typeof(void)) {
-                        Debug.LogError($"Ignoring convertion method {method} because it does not returns anything");
+                        Debug.LogError($"Ignoring conversion method {method} because it does not returns anything");
                         continue;
                     }
 
@@ -73,7 +72,7 @@ public static class TypeAdapter {
 
                     try {
 #if ENABLE_IL2CPP
-// IL2CPP doesn't suport calling generic functions via reflection (AOT can't generate templated code)
+// IL2CPP doesn't support calling generic functions via reflection (AOT can't generate templated code)
                             Func<object, object> r =
  (object param) => { return (object)method.Invoke(null, new object[]{ param }); };
 #else
