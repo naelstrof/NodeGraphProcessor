@@ -105,8 +105,13 @@ public static class TypeAdapter {
     }
 
     public static bool AreIncompatible(Type from, Type to) {
-        if (incompatibleTypes.Any((k) => k.from == from && k.to == to))
-            return true;
+        var count = incompatibleTypes.Count;
+        for (int i = 0; i < count; i++) {
+            var type = incompatibleTypes[i];
+            if (type.from == from && type.to == to) {
+                return true;
+            }
+        }
         return false;
     }
 
@@ -120,7 +125,7 @@ public static class TypeAdapter {
         return adapters.ContainsKey((from, to));
     }
 
-    public static MethodInfo GetConvertionMethod(Type from, Type to) {
+    public static MethodInfo GetConversionMethod(Type from, Type to) {
         return adapterMethods[(from, to)];
     }
 
@@ -128,9 +133,8 @@ public static class TypeAdapter {
         if (!adaptersLoaded)
             LoadAllAdapters();
 
-        Func<object, object> convertionFunction;
-        if (adapters.TryGetValue((from.GetType(), targetType), out convertionFunction))
-            return convertionFunction?.Invoke(from);
+        if (adapters.TryGetValue((from.GetType(), targetType), out var conversionFunction))
+            return conversionFunction?.Invoke(from);
 
         return null;
     }

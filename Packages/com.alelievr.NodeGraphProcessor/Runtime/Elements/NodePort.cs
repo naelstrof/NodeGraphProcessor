@@ -88,6 +88,8 @@ public class NodePort {
     /// </summary>
     public FieldInfo fieldInfo;
 
+    private readonly Type fieldType;
+
     /// <summary>
     /// Data of the port
     /// </summary>
@@ -136,6 +138,7 @@ public class NodePort {
         fieldInfo = fieldOwner.GetType().GetField(
             fieldName,
             BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+        fieldType = fieldInfo.FieldType;
         customPortIOMethod = CustomPortIO.GetCustomPortMethod(owner.GetType(), fieldName);
     }
 
@@ -212,7 +215,7 @@ public class NodePort {
             if (TypeAdapter.AreAssignable(outType, inType)) {
                 // We add a cast in case there we're calling the conversion method with a base class parameter (like object)
                 var convertedParam = Expression.Convert(outputParamField, outType);
-                outputParamField = Expression.Call(TypeAdapter.GetConvertionMethod(outType, inType), convertedParam);
+                outputParamField = Expression.Call(TypeAdapter.GetConversionMethod(outType, inType), convertedParam);
                 // In case there is a custom port behavior in the output, then we need to re-cast to the base type because
                 // the convertion method return type is not always assignable directly:
                 outputParamField = Expression.Convert(outputParamField, inputField.FieldType);
@@ -304,16 +307,15 @@ public class NodePort {
 
         // Only one input connection is handled by this code, if you want to
         // take multiple inputs, you must create a custom input function see CustomPortsNode.cs
-        if (edges.Count > 0) {
-            var passThroughObject = edges[0].passThroughBuffer;
+        if (edges.Count <= 0) return;
+        var passThroughObject = edges[0].passThroughBuffer;
 
-            // We do an extra convertion step in case the buffer output is not compatible with the input port
-            if (passThroughObject != null)
-                if (TypeAdapter.AreAssignable(fieldInfo.FieldType, passThroughObject.GetType()))
-                    passThroughObject = TypeAdapter.Convert(passThroughObject, fieldInfo.FieldType);
+        // We do an extra convertion step in case the buffer output is not compatible with the input port
+        if (passThroughObject != null)
+            if (TypeAdapter.AreAssignable(fieldType, passThroughObject.GetType()))
+                passThroughObject = TypeAdapter.Convert(passThroughObject, fieldType);
 
-            fieldInfo.SetValue(fieldOwner, passThroughObject);
-        }
+        fieldInfo.SetValue(fieldOwner, passThroughObject);
     }
 }
 
