@@ -597,7 +597,7 @@ public abstract class BaseNode {
     public void OnProcess() {
         inputPorts.PullDatas();
 
-        ExceptionToLog.Call(() => Process());
+        ExceptionToLog.Call(Process);
 
         InvokeOnProcessed();
 
