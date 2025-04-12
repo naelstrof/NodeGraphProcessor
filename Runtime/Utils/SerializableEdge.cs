@@ -1,9 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 
 namespace GraphProcessor {
-[System.Serializable]
+[Serializable]
 public class SerializableEdge : ISerializationCallbackReceiver {
     public string GUID;
 
@@ -12,16 +11,6 @@ public class SerializableEdge : ISerializationCallbackReceiver {
     [SerializeField] private string inputNodeGUID;
     [SerializeField] private string outputNodeGUID;
 
-    [System.NonSerialized] public BaseNode inputNode;
-
-    [System.NonSerialized] public NodePort inputPort;
-    [System.NonSerialized] public NodePort outputPort;
-
-    //temporary object used to send port to port data when a custom input/output function is used.
-    [System.NonSerialized] public object passThroughBuffer;
-
-    [System.NonSerialized] public BaseNode outputNode;
-
     public string inputFieldName;
     public string outputFieldName;
 
@@ -29,25 +18,15 @@ public class SerializableEdge : ISerializationCallbackReceiver {
     public string inputPortIdentifier;
     public string outputPortIdentifier;
 
-    public SerializableEdge() {
-    }
+    [NonSerialized] public BaseNode inputNode;
 
-    public static SerializableEdge CreateNewEdge(BaseGraph graph, NodePort inputPort, NodePort outputPort) {
-        var edge = new SerializableEdge();
+    [NonSerialized] public NodePort inputPort;
 
-        edge.owner = graph;
-        edge.GUID = System.Guid.NewGuid().ToString();
-        edge.inputNode = inputPort.owner;
-        edge.inputFieldName = inputPort.fieldName;
-        edge.outputNode = outputPort.owner;
-        edge.outputFieldName = outputPort.fieldName;
-        edge.inputPort = inputPort;
-        edge.outputPort = outputPort;
-        edge.inputPortIdentifier = inputPort.portData.identifier;
-        edge.outputPortIdentifier = outputPort.portData.identifier;
+    [NonSerialized] public BaseNode outputNode;
+    [NonSerialized] public NodePort outputPort;
 
-        return edge;
-    }
+    //temporary object used to send port to port data when a custom input/output function is used.
+    [NonSerialized] public object passThroughBuffer;
 
     public void OnBeforeSerialize() {
         if (outputNode == null || inputNode == null)
@@ -58,6 +37,23 @@ public class SerializableEdge : ISerializationCallbackReceiver {
     }
 
     public void OnAfterDeserialize() {
+    }
+
+    public static SerializableEdge CreateNewEdge(BaseGraph graph, NodePort inputPort, NodePort outputPort) {
+        var edge = new SerializableEdge();
+
+        edge.owner = graph;
+        edge.GUID = Guid.NewGuid().ToString();
+        edge.inputNode = inputPort.owner;
+        edge.inputFieldName = inputPort.fieldName;
+        edge.outputNode = outputPort.owner;
+        edge.outputFieldName = outputPort.fieldName;
+        edge.inputPort = inputPort;
+        edge.outputPort = outputPort;
+        edge.inputPortIdentifier = inputPort.portData.identifier;
+        edge.outputPortIdentifier = outputPort.portData.identifier;
+
+        return edge;
     }
 
     //here our owner have been deserialized
