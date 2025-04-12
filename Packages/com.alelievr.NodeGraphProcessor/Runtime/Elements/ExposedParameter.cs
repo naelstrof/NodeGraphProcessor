@@ -503,4 +503,33 @@ public class MaterialParameter : ExposedParameter {
         return typeof(Material);
     }
 }
+
+[Serializable]
+public class QuaternionParameter : ExposedParameter {
+    [SerializeField] private Quaternion val = Quaternion.identity;
+
+    public override object value {
+        get => val;
+        set => val = (Quaternion)value;
+    }
+
+    public override Type GetValueType() {
+        return typeof(Quaternion);
+    }
+}
+
+[Serializable]
+public class TransformParameter : ExposedParameter {
+    [SerializeField] private Transform val;
+
+    public override object value {
+        get => val;
+        set => val = (Transform)value;
+    }
+
+    public override Type GetValueType() {
+        return typeof(Transform);
+    }
+}
+
 }
