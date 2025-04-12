@@ -1,27 +1,28 @@
-using UnityEngine;
+using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace GraphProcessor {
 /// <summary>
-/// Data container for the StackNode views
+///     Data container for the StackNode views
 /// </summary>
-[System.Serializable]
+[Serializable]
 public class BaseStackNode {
     public Vector2 position;
     public string title = "New Stack";
 
     /// <summary>
-    /// Is the stack accept drag and dropped nodes
+    ///     Is the stack accept drag and dropped nodes
     /// </summary>
     public bool acceptDrop;
 
     /// <summary>
-    /// Is the stack accepting node created by pressing space over the stack node
+    ///     Is the stack accepting node created by pressing space over the stack node
     /// </summary>
     public bool acceptNewNode;
 
     /// <summary>
-    /// List of node GUID that are in the stack
+    ///     List of node GUID that are in the stack
     /// </summary>
     /// <typeparam name="string"></typeparam>
     /// <returns></returns>

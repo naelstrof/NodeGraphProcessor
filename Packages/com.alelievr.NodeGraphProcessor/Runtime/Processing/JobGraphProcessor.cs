@@ -1,30 +1,18 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Unity.Jobs;
-using Unity.Collections;
 
 // using Unity.Entities;
 
 namespace GraphProcessor {
 /// <summary>
-/// Graph processor
+///     Graph processor
 /// </summary>
 public class JobGraphProcessor : BaseGraphProcessor {
     private GraphScheduleList[] scheduleList;
 
-    internal class GraphScheduleList {
-        public BaseNode node;
-        public BaseNode[] dependencies;
-
-        public GraphScheduleList(BaseNode node) {
-            this.node = node;
-        }
-    }
-
     /// <summary>
-    /// Manage graph scheduling and processing
+    ///     Manage graph scheduling and processing
     /// </summary>
     /// <param name="graph">Graph to be processed</param>
     public JobGraphProcessor(BaseGraph graph) : base(graph) {
@@ -39,7 +27,7 @@ public class JobGraphProcessor : BaseGraphProcessor {
     }
 
     /// <summary>
-    /// Schedule the graph into the job system
+    ///     Schedule the graph into the job system
     /// </summary>
     public override void Run() {
         var count = scheduleList.Length;
@@ -59,6 +47,15 @@ public class JobGraphProcessor : BaseGraphProcessor {
         }
 
         JobHandle.ScheduleBatchedJobs();
+    }
+
+    internal class GraphScheduleList {
+        public BaseNode[] dependencies;
+        public BaseNode node;
+
+        public GraphScheduleList(BaseNode node) {
+            this.node = node;
+        }
     }
 }
 }

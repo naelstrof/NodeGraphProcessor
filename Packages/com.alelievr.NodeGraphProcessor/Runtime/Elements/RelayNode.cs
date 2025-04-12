@@ -1,43 +1,37 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
-using GraphProcessor;
 using System.Linq;
-using System;
+using GraphProcessor;
+using UnityEngine;
 
 [Serializable]
 [NodeMenuItem("Utils/Relay")]
 public class RelayNode : BaseNode {
     private const string packIdentifier = "_Pack";
 
-    [HideInInspector]
-    public struct PackedRelayData {
-        public List<object> values;
-        public List<string> names;
-        public List<Type> types;
-    }
+    private const int k_MaxPortSize = 14;
+
+    private static List<(Type, string)> s_empty = new();
+
+    public bool unpackOutput;
+    public bool packInput;
+    public int inputEdgeCount;
 
     [Input(name = "In")] public PackedRelayData input;
 
-    [Output(name = "Out")] public PackedRelayData output;
-
-    public bool unpackOutput = false;
-    public bool packInput = false;
-    public int inputEdgeCount = 0;
-    [NonSerialized] private int outputIndex = 0;
-
     private SerializableType inputType = new(typeof(object));
 
-    private const int k_MaxPortSize = 14;
+    [Output(name = "Out")] public PackedRelayData output;
+    [NonSerialized] private int outputIndex;
+
+    public override string layoutStyle => "GraphProcessorStyles/RelayNode";
 
     protected override void Process() {
         outputIndex = 0;
         output = input;
     }
 
-    public override string layoutStyle => "GraphProcessorStyles/RelayNode";
-
-    [CustomPortInput(nameof(input), typeof(object), true)]
+    [CustomPortInput(nameof(input), typeof(object))]
     public void GetInputs(List<SerializableEdge> edges) {
         inputEdgeCount = edges.Count;
 
@@ -53,7 +47,7 @@ public class RelayNode : BaseNode {
         }
     }
 
-    [CustomPortOutput(nameof(output), typeof(object), true)]
+    [CustomPortOutput(nameof(output), typeof(object))]
     public void PushOutputs(List<SerializableEdge> edges, NodePort outputPort) {
         if (inputPorts.Count == 0)
             return;
@@ -148,8 +142,6 @@ public class RelayNode : BaseNode {
         }
     }
 
-    private static List<(Type, string)> s_empty = new();
-
     public List<(Type type, string name)> GetUnderlyingPortDataList() {
         // get input edges:
         if (inputPorts.Count == 0)
@@ -172,5 +164,11 @@ public class RelayNode : BaseNode {
             inputEdges = inputEdges.First().outputNode.inputPorts[0]?.GetEdges();
 
         return inputEdges;
+    }
+
+    public struct PackedRelayData {
+        public List<object> values;
+        public List<string> names;
+        public List<Type> types;
     }
 }

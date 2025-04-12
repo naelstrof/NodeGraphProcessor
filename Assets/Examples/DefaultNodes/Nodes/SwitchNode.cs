@@ -1,22 +1,16 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System;
 using GraphProcessor;
-using System.Linq;
 
-[System.Serializable, NodeMenuItem("Conditional/Switch")]
-public class SwitchNode : BaseNode
-{
-	[Input(name = "In")]
-    public float                input;
+[Serializable]
+[NodeMenuItem("Conditional/Switch")]
+public class SwitchNode : BaseNode {
+    [Input(name = "In")] public float input;
 
-	[Output(name = "Out")]
-	public float				output;
+    [Output(name = "Out")] public float output;
 
-	public override string		name => "Switch";
+    public override string name => "Switch";
 
-	protected override void Process()
-	{
-	    output = input * 42;
-	}
+    protected override void Process() {
+        output = input * 42;
+    }
 }

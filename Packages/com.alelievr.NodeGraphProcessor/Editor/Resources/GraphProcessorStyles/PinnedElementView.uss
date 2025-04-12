@@ -1,5 +1,5 @@
 .pinnedElement {
-    position:absolute;
+    position: absolute;
     border-left-width: 1px;
     border-top-width: 1px;
     border-right-width: 1px;
@@ -27,10 +27,10 @@
 
 .pinnedElement.scrollable > .mainContainer {
     position: absolute;
-    top:0;
-    left:0;
-    right:0;
-    bottom:0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }
 
 .pinnedElement > .mainContainer > #content {
@@ -82,7 +82,7 @@
 }
 
 .pinnedElement > .mainContainer > #content > #header > #addButton {
-    align-self:center;
+    align-self: center;
     font-size: 20px;
     background-image: none;
     padding-left: 0px;
@@ -90,14 +90,14 @@
     padding-right: 0px;
     padding-bottom: 0px;
 
-    margin-top:3px;
-    margin-bottom:3px;
-    margin-left:4px;
-    margin-right:4px;
-    border-left-width:6px;
-    border-top-width:4px;
-    border-right-width:6px;
-    border-bottom-width:4px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    margin-left: 4px;
+    margin-right: 4px;
+    border-left-width: 6px;
+    border-top-width: 4px;
+    border-right-width: 6px;
+    border-bottom-width: 4px;
 }
 
 .pinnedElement > .mainContainer > #content > #header > #addButton:hover {
@@ -109,7 +109,7 @@
 }
 
 .pinnedElement > .mainContainer > #content > #header > #labelContainer > #titleLabel {
-    font-size : 14px;
+    font-size: 14px;
     color: #c1c1c1;
 }
 

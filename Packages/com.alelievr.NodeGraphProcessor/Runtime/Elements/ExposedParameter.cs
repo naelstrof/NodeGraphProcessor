@@ -5,28 +5,7 @@ using UnityEngine;
 namespace GraphProcessor {
 [Serializable]
 public class ExposedParameter : ISerializationCallbackReceiver {
-    [Serializable]
-    public class Settings {
-        public bool isHidden = false;
-        public bool expanded = false;
-
-        [SerializeField] internal string guid = null;
-
-        public override bool Equals(object obj) {
-            if (obj is Settings s && s != null)
-                return Equals(s);
-            else
-                return false;
-        }
-
-        public virtual bool Equals(Settings param) {
-            return isHidden == param.isHidden && expanded == param.expanded;
-        }
-
-        public override int GetHashCode() {
-            return base.GetHashCode();
-        }
-    }
+    private static Dictionary<Type, Type> exposedParameterTypeCache = new();
 
     public string guid; // unique id to keep track of the parameter
     public string name;
@@ -36,13 +15,7 @@ public class ExposedParameter : ISerializationCallbackReceiver {
     [SerializeReference] public Settings settings;
     public string shortType => GetValueType()?.Name;
 
-    public void Initialize(string name, object value) {
-        guid = Guid.NewGuid().ToString(); // Generated once and unique per parameter
-        settings = CreateSettings();
-        settings.guid = guid;
-        this.name = name;
-        this.value = value;
-    }
+    public virtual object value { get; set; }
 
     void ISerializationCallbackReceiver.OnAfterDeserialize() {
         // SerializeReference migration step:
@@ -59,17 +32,21 @@ public class ExposedParameter : ISerializationCallbackReceiver {
     void ISerializationCallbackReceiver.OnBeforeSerialize() {
     }
 
+    public void Initialize(string name, object value) {
+        guid = Guid.NewGuid().ToString(); // Generated once and unique per parameter
+        settings = CreateSettings();
+        settings.guid = guid;
+        this.name = name;
+        this.value = value;
+    }
+
     protected virtual Settings CreateSettings() {
         return new Settings();
     }
 
-    public virtual object value { get; set; }
-
     public virtual Type GetValueType() {
         return value == null ? typeof(object) : value.GetType();
     }
-
-    private static Dictionary<Type, Type> exposedParameterTypeCache = new();
 
     internal ExposedParameter Migrate() {
         if (exposedParameterTypeCache.Count == 0)
@@ -119,8 +96,7 @@ public class ExposedParameter : ISerializationCallbackReceiver {
     public override bool Equals(object obj) {
         if (obj == null || !GetType().Equals(obj.GetType()))
             return false;
-        else
-            return Equals((ExposedParameter)obj);
+        return Equals((ExposedParameter)obj);
     }
 
     public override int GetHashCode() {
@@ -138,6 +114,28 @@ public class ExposedParameter : ISerializationCallbackReceiver {
 
         return clonedParam;
     }
+
+    [Serializable]
+    public class Settings {
+        public bool isHidden;
+        public bool expanded;
+
+        [SerializeField] internal string guid;
+
+        public override bool Equals(object obj) {
+            if (obj is Settings s && s != null)
+                return Equals(s);
+            return false;
+        }
+
+        public virtual bool Equals(Settings param) {
+            return isHidden == param.isHidden && expanded == param.expanded;
+        }
+
+        public override int GetHashCode() {
+            return base.GetHashCode();
+        }
+    }
 }
 
 // Due to polymorphic constraints with [SerializeReference] we need to explicitly create a class for
@@ -147,15 +145,6 @@ public class ColorParameter : ExposedParameter {
     public enum ColorMode {
         Default,
         HDR
-    }
-
-    [Serializable]
-    public class ColorSettings : Settings {
-        public ColorMode mode;
-
-        public override bool Equals(Settings param) {
-            return base.Equals(param) && mode == ((ColorSettings)param).mode;
-        }
     }
 
     [SerializeField] private Color val;
@@ -168,6 +157,15 @@ public class ColorParameter : ExposedParameter {
     protected override Settings CreateSettings() {
         return new ColorSettings();
     }
+
+    [Serializable]
+    public class ColorSettings : Settings {
+        public ColorMode mode;
+
+        public override bool Equals(Settings param) {
+            return base.Equals(param) && mode == ((ColorSettings)param).mode;
+        }
+    }
 }
 
 [Serializable]
@@ -175,18 +173,6 @@ public class FloatParameter : ExposedParameter {
     public enum FloatMode {
         Default,
         Slider
-    }
-
-    [Serializable]
-    public class FloatSettings : Settings {
-        public FloatMode mode;
-        public float min = 0;
-        public float max = 1;
-
-        public override bool Equals(Settings param) {
-            return base.Equals(param) && mode == ((FloatSettings)param).mode && min == ((FloatSettings)param).min &&
-                   max == ((FloatSettings)param).max;
-        }
     }
 
     [SerializeField] private float val;
@@ -199,6 +185,18 @@ public class FloatParameter : ExposedParameter {
     protected override Settings CreateSettings() {
         return new FloatSettings();
     }
+
+    [Serializable]
+    public class FloatSettings : Settings {
+        public FloatMode mode;
+        public float min;
+        public float max = 1;
+
+        public override bool Equals(Settings param) {
+            return base.Equals(param) && mode == ((FloatSettings)param).mode && min == ((FloatSettings)param).min &&
+                   max == ((FloatSettings)param).max;
+        }
+    }
 }
 
 [Serializable]
@@ -206,18 +204,6 @@ public class Vector2Parameter : ExposedParameter {
     public enum Vector2Mode {
         Default,
         MinMaxSlider
-    }
-
-    [Serializable]
-    public class Vector2Settings : Settings {
-        public Vector2Mode mode;
-        public float min = 0;
-        public float max = 1;
-
-        public override bool Equals(Settings param) {
-            return base.Equals(param) && mode == ((Vector2Settings)param).mode &&
-                   min == ((Vector2Settings)param).min && max == ((Vector2Settings)param).max;
-        }
     }
 
     [SerializeField] private Vector2 val;
@@ -229,6 +215,18 @@ public class Vector2Parameter : ExposedParameter {
 
     protected override Settings CreateSettings() {
         return new Vector2Settings();
+    }
+
+    [Serializable]
+    public class Vector2Settings : Settings {
+        public Vector2Mode mode;
+        public float min;
+        public float max = 1;
+
+        public override bool Equals(Settings param) {
+            return base.Equals(param) && mode == ((Vector2Settings)param).mode &&
+                   min == ((Vector2Settings)param).min && max == ((Vector2Settings)param).max;
+        }
     }
 }
 
@@ -259,18 +257,6 @@ public class IntParameter : ExposedParameter {
         Slider
     }
 
-    [Serializable]
-    public class IntSettings : Settings {
-        public IntMode mode;
-        public int min = 0;
-        public int max = 10;
-
-        public override bool Equals(Settings param) {
-            return base.Equals(param) && mode == ((IntSettings)param).mode && min == ((IntSettings)param).min &&
-                   max == ((IntSettings)param).max;
-        }
-    }
-
     [SerializeField] private int val;
 
     public override object value {
@@ -280,6 +266,18 @@ public class IntParameter : ExposedParameter {
 
     protected override Settings CreateSettings() {
         return new IntSettings();
+    }
+
+    [Serializable]
+    public class IntSettings : Settings {
+        public IntMode mode;
+        public int min;
+        public int max = 10;
+
+        public override bool Equals(Settings param) {
+            return base.Equals(param) && mode == ((IntSettings)param).mode && min == ((IntSettings)param).min &&
+                   max == ((IntSettings)param).max;
+        }
     }
 }
 
@@ -398,15 +396,6 @@ public class GradientParameter : ExposedParameter {
         HDR
     }
 
-    [Serializable]
-    public class GradientSettings : Settings {
-        public GradientColorMode mode;
-
-        public override bool Equals(Settings param) {
-            return base.Equals(param) && mode == ((GradientSettings)param).mode;
-        }
-    }
-
     [SerializeField] private Gradient val;
     [SerializeField] [GradientUsage(true)] private Gradient hdrVal;
 
@@ -421,6 +410,15 @@ public class GradientParameter : ExposedParameter {
 
     protected override Settings CreateSettings() {
         return new GradientSettings();
+    }
+
+    [Serializable]
+    public class GradientSettings : Settings {
+        public GradientColorMode mode;
+
+        public override bool Equals(Settings param) {
+            return base.Equals(param) && mode == ((GradientSettings)param).mode;
+        }
     }
 }
 
@@ -531,5 +529,4 @@ public class TransformParameter : ExposedParameter {
         return typeof(Transform);
     }
 }
-
 }

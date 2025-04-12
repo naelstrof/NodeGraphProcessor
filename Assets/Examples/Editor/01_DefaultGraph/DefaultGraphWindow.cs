@@ -1,41 +1,35 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using GraphProcessor;
 using UnityEditor;
-using GraphProcessor;
+using UnityEngine;
 
-public class DefaultGraphWindow : BaseGraphWindow
-{
-	BaseGraph	tmpGraph;
+public class DefaultGraphWindow : BaseGraphWindow {
+    private BaseGraph tmpGraph;
 
-	[MenuItem("Window/01 DefaultGraph")]
-	public static BaseGraphWindow OpenWithTmpGraph()
-	{
-		var graphWindow = CreateWindow< DefaultGraphWindow >();
+    protected override void OnDestroy() {
+        graphView?.Dispose();
+        DestroyImmediate(tmpGraph);
+    }
 
-		// When the graph is opened from the window, we don't save the graph to disk
-		graphWindow.tmpGraph = ScriptableObject.CreateInstance<BaseGraph>();
-		graphWindow.tmpGraph.hideFlags = HideFlags.HideAndDontSave;
-		graphWindow.InitializeGraph(graphWindow.tmpGraph);
+    [MenuItem("Window/01 DefaultGraph")]
+    public static BaseGraphWindow OpenWithTmpGraph() {
+        var graphWindow = CreateWindow<DefaultGraphWindow>();
 
-		graphWindow.Show();
+        // When the graph is opened from the window, we don't save the graph to disk
+        graphWindow.tmpGraph = CreateInstance<BaseGraph>();
+        graphWindow.tmpGraph.hideFlags = HideFlags.HideAndDontSave;
+        graphWindow.InitializeGraph(graphWindow.tmpGraph);
 
-		return graphWindow;
-	}
+        graphWindow.Show();
 
-	protected override void OnDestroy()
-	{
-		graphView?.Dispose();
-		DestroyImmediate(tmpGraph);
-	}
+        return graphWindow;
+    }
 
-	protected override void InitializeWindow(BaseGraph graph)
-	{
-		titleContent = new GUIContent("Default Graph");
+    protected override void InitializeWindow(BaseGraph graph) {
+        titleContent = new GUIContent("Default Graph");
 
-		if (graphView == null)
-			graphView = new BaseGraphView(this);
+        if (graphView == null)
+            graphView = new BaseGraphView(this);
 
-		rootView.Add(graphView);
-	}
+        rootView.Add(graphView);
+    }
 }

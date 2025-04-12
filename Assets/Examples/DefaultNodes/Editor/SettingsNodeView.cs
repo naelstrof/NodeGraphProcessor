@@ -1,32 +1,22 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEditor;
-using UnityEditor.UIElements;
-using UnityEditor.Experimental.GraphView;
+﻿using GraphProcessor;
 using UnityEngine.UIElements;
-using GraphProcessor;
 
 [NodeCustomEditor(typeof(SettingsNode))]
-public class SettingsNodeView : BaseNodeView
-{
-	protected override bool hasSettings => true;
+public class SettingsNodeView : BaseNodeView {
+    private SettingsNode settingsNode;
+    protected override bool hasSettings => true;
 
-	SettingsNode	settingsNode;
+    public override void Enable() {
+        settingsNode = nodeTarget as SettingsNode;
 
-	public override void Enable()
-	{
-		settingsNode = nodeTarget as SettingsNode;
+        controlsContainer.Add(new Label("Hello World !"));
+    }
 
-		controlsContainer.Add(new Label("Hello World !"));
-	}
+    protected override VisualElement CreateSettingsView() {
+        var settings = new VisualElement();
 
-	protected override VisualElement CreateSettingsView()
-	{
-		var settings = new VisualElement();
+        settings.Add(new EnumField("S", settingsNode.setting));
 
-		settings.Add(new EnumField("S", settingsNode.setting));
-
-		return settings;
-	}
+        return settings;
+    }
 }

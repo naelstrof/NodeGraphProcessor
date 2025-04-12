@@ -1,32 +1,9 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace GraphProcessor {
 public static class GraphUtils {
-    private enum State {
-        White,
-        Grey,
-        Black
-    }
-
-    private class TarversalNode {
-        public BaseNode node;
-        public List<TarversalNode> inputs = new();
-        public List<TarversalNode> outputs = new();
-        public State state = State.White;
-
-        public TarversalNode(BaseNode node) {
-            this.node = node;
-        }
-    }
-
-    // A structure made for easy graph traversal
-    private class TraversalGraph {
-        public List<TarversalNode> nodes = new();
-        public List<TarversalNode> outputs = new();
-    }
-
     private static TraversalGraph ConvertGraphToTraversalGraph(BaseGraph graph) {
         var g = new TraversalGraph();
         var nodeMap = new Dictionary<BaseNode, TarversalNode>();
@@ -104,7 +81,30 @@ public static class GraphUtils {
             n.state = State.Black;
         }
 
-        cyclicNodes.ForEach((tn) => cyclicNode?.Invoke(tn.node));
+        cyclicNodes.ForEach(tn => cyclicNode?.Invoke(tn.node));
+    }
+
+    private enum State {
+        White,
+        Grey,
+        Black
+    }
+
+    private class TarversalNode {
+        public readonly BaseNode node;
+        public List<TarversalNode> inputs = new();
+        public List<TarversalNode> outputs = new();
+        public State state = State.White;
+
+        public TarversalNode(BaseNode node) {
+            this.node = node;
+        }
+    }
+
+    // A structure made for easy graph traversal
+    private class TraversalGraph {
+        public readonly List<TarversalNode> nodes = new();
+        public readonly List<TarversalNode> outputs = new();
     }
 }
 }

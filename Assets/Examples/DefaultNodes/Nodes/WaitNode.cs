@@ -3,46 +3,40 @@ using System.Collections;
 using GraphProcessor;
 using UnityEngine;
 
-namespace NodeGraphProcessor.Examples
-{
-	[Serializable, NodeMenuItem("Functions/Wait")]
-	public class WaitNode : WaitableNode
-	{
-		public override string name => "Wait";
+namespace NodeGraphProcessor.Examples {
+[Serializable]
+[NodeMenuItem("Functions/Wait")]
+public class WaitNode : WaitableNode {
+    private static WaitMonoBehaviour waitMonoBehaviour;
 
-		[SerializeField, Input(name = "Seconds")]
-		public float waitTime = 1f;
+    [SerializeField] [Input(name = "Seconds")]
+    public float waitTime = 1f;
 
-		private static WaitMonoBehaviour waitMonoBehaviour;
+    public override string name => "Wait";
 
-		protected override void Process()
-		{
-			//	We should check where this Process() called from. But i don't know if this is an elegant and performant way to do that.
-			//	If this function is called from other than the ConditionalNode, then there will be problems, errors, unforeseen consequences, tears.
-			// var isCalledFromConditionalProcessor = new StackTrace().GetFrame(5).GetMethod().ReflectedType == typeof(ConditionalProcessor);
-			// if(!isCalledFromConditionalProcessor) return;
-			
-			if(waitMonoBehaviour == null)
-			{
-				var go = new GameObject(name: "WaitGameObject");
-				waitMonoBehaviour = go.AddComponent<WaitMonoBehaviour>();
-			}
+    protected override void Process() {
+        //	We should check where this Process() called from. But i don't know if this is an elegant and performant way to do that.
+        //	If this function is called from other than the ConditionalNode, then there will be problems, errors, unforeseen consequences, tears.
+        // var isCalledFromConditionalProcessor = new StackTrace().GetFrame(5).GetMethod().ReflectedType == typeof(ConditionalProcessor);
+        // if(!isCalledFromConditionalProcessor) return;
 
-			waitMonoBehaviour.Process(waitTime, ProcessFinished);
-		}
-	}
+        if (waitMonoBehaviour == null) {
+            var go = new GameObject("WaitGameObject");
+            waitMonoBehaviour = go.AddComponent<WaitMonoBehaviour>();
+        }
 
-	public class WaitMonoBehaviour : MonoBehaviour
-	{
-		public void Process(float time, Action callback)
-		{
-			StartCoroutine(_Process(time, callback));
-		}
+        waitMonoBehaviour.Process(waitTime, ProcessFinished);
+    }
+}
 
-		private IEnumerator _Process(float time, Action callback)
-		{
-			yield return new WaitForSeconds(time);
-			callback.Invoke();
-		}
-	}
+public class WaitMonoBehaviour : MonoBehaviour {
+    public void Process(float time, Action callback) {
+        StartCoroutine(_Process(time, callback));
+    }
+
+    private IEnumerator _Process(float time, Action callback) {
+        yield return new WaitForSeconds(time);
+        callback.Invoke();
+    }
+}
 }
