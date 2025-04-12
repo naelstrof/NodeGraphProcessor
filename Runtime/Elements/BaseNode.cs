@@ -9,8 +9,7 @@ using System.Linq;
 namespace GraphProcessor {
 public delegate IEnumerable<PortData> CustomPortBehaviorDelegate(List<SerializableEdge> edges);
 
-public delegate IEnumerable<PortData>
-    CustomPortTypeBehaviorDelegate(string fieldName, string displayName, object value);
+public delegate IEnumerable<PortData> CustomPortTypeBehaviorDelegate(string fieldName, string displayName, object value);
 
 [Serializable]
 public abstract class BaseNode {
@@ -290,7 +289,7 @@ public abstract class BaseNode {
         }
 
         // Order by MetadataToken and inheritance level to sync the order with the port order (make sure FieldDrawers are next to the correct port)
-        return fields.OrderByDescending(f => (long)(GetFieldInheritanceLevel(f) << 32 | (long)f.MetadataToken));
+        return fields.OrderByDescending(f => (long)((GetFieldInheritanceLevel(f) << 32) | (long)f.MetadataToken));
     }
 
     protected BaseNode() {

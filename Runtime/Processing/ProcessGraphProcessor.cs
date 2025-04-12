@@ -1,21 +1,17 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Unity.Jobs;
-using Unity.Collections;
 
 // using Unity.Entities;
 
 namespace GraphProcessor {
 /// <summary>
-/// Graph processor
+///     Graph processor
 /// </summary>
 public class ProcessGraphProcessor : BaseGraphProcessor {
     private List<BaseNode> processList;
 
     /// <summary>
-    /// Manage graph scheduling and processing
+    ///     Manage graph scheduling and processing
     /// </summary>
     /// <param name="graph">Graph to be processed</param>
     public ProcessGraphProcessor(BaseGraph graph) : base(graph) {
@@ -26,7 +22,7 @@ public class ProcessGraphProcessor : BaseGraphProcessor {
     }
 
     /// <summary>
-    /// Process all the nodes following the compute order.
+    ///     Process all the nodes following the compute order.
     /// </summary>
     public override void Run() {
         var count = processList.Count;

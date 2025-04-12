@@ -24,26 +24,24 @@ PortView > #connector {
 
     margin-left: 4px;
     margin-right: 4px;
-    border-left-width:1px;
-    border-top-width:1px;
-    border-right-width:1px;
-    border-bottom-width:1px;
+    border-left-width: 1px;
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
 }
 
 PortView > #connector:hover {
-    border-color:  #f0f0f0
+    border-color: #f0f0f0
 }
 
-PortView > #connector > #cap
-{
+PortView > #connector > #cap {
     background-color: #212121;
     width: 4px;
     height: 4px;
     border-radius: 4px;
 }
 
-PortView > #connector > #cap:hover
-{
+PortView > #connector > #cap:hover {
     background-color: #f0f0f0;
 }
 
@@ -75,7 +73,6 @@ PortView > #connector > #cap:hover
     --port-color: #FF00FF;
 }
 
-.Vertical
-{
+.Vertical {
     height: 6px;
 }
