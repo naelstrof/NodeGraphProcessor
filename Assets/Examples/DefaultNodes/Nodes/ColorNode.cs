@@ -1,14 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System;
 using GraphProcessor;
-using System.Linq;
+using UnityEngine;
 
-[System.Serializable, NodeMenuItem("Primitives/Color")]
-public class ColorNode : BaseNode
-{
-	[Output(name = "Color"), SerializeField]
-	new public Color				color;
+[Serializable]
+[NodeMenuItem("Primitives/Color")]
+public class ColorNode : BaseNode {
+    [Output(name = "Color")] [SerializeField]
+    public new Color color;
 
-	public override string		name => "Color";
+    public override string name => "Color";
 }

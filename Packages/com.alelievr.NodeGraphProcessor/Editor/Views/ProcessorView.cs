@@ -1,35 +1,25 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEditor.Experimental.GraphView;
-using UnityEditor.UIElements;
-using UnityEngine.UIElements;
+﻿using UnityEngine.UIElements;
 
-namespace GraphProcessor
-{
-	public class ProcessorView : PinnedElementView
-	{
-		BaseGraphProcessor	processor;
+namespace GraphProcessor {
+public class ProcessorView : PinnedElementView {
+    private BaseGraphProcessor processor;
 
-		public ProcessorView()
-		{
-			title = "Process panel";
-		}
+    public ProcessorView() {
+        title = "Process panel";
+    }
 
-		protected override void Initialize(BaseGraphView graphView)
-		{
-			processor = new ProcessGraphProcessor(graphView.graph);
+    protected override void Initialize(BaseGraphView graphView) {
+        processor = new ProcessGraphProcessor(graphView.graph);
 
-			graphView.computeOrderUpdated += processor.UpdateComputeOrder;
+        graphView.computeOrderUpdated += processor.UpdateComputeOrder;
 
-			Button	b = new Button(OnPlay) { name = "ActionButton", text = "Play !" };
+        var b = new Button(OnPlay) { name = "ActionButton", text = "Play !" };
 
-			content.Add(b);
-		}
+        content.Add(b);
+    }
 
-		void OnPlay()
-		{
-			processor.Run();
-		}
-	}
+    private void OnPlay() {
+        processor.Run();
+    }
+}
 }

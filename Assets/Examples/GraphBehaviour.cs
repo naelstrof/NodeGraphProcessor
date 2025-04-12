@@ -1,13 +1,11 @@
-using UnityEngine;
 using GraphProcessor;
+using UnityEngine;
 
 [ExecuteAlways]
-public class GraphBehaviour : MonoBehaviour
-{
+public class GraphBehaviour : MonoBehaviour {
     public BaseGraph graph;
 
-    protected virtual void OnEnable()
-    {
+    protected virtual void OnEnable() {
         if (graph == null)
             graph = ScriptableObject.CreateInstance<BaseGraph>();
 

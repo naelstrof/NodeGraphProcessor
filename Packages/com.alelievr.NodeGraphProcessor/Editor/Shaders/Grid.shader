@@ -9,7 +9,10 @@ Shader "GraphView/Grid"
     }
     SubShader
     {
-        Tags { "RenderType" = "Opaque" }
+        Tags
+        {
+            "RenderType" = "Opaque"
+        }
         LOD 200
 
         Pass
@@ -47,7 +50,7 @@ Shader "GraphView/Grid"
                 return max(d2.x, d2.y) * smoothstep(0.1, 0.9, scaleFactor / _ScaleLimit);
             }
 
-            v2f vert (appdata v)
+            v2f vert(appdata v)
             {
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
@@ -58,12 +61,12 @@ Shader "GraphView/Grid"
                 return o;
             }
 
-            fixed4 frag (v2f i) : SV_Target
+            fixed4 frag(v2f i) : SV_Target
             {
                 float2 uv = i.uv;
                 float scaleFactor = i.scaleFactor;
                 float weight = grid(uv, scaleFactor)
-                + grid(uv / _ScaleLimit, scaleFactor * _ScaleLimit);
+                    + grid(uv / _ScaleLimit, scaleFactor * _ScaleLimit);
                 fixed4 col = lerp(_BackgroundColor, _GridColor, weight);
                 return col;
             }

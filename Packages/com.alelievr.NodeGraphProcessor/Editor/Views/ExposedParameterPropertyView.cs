@@ -1,28 +1,21 @@
 using UnityEngine.UIElements;
-using UnityEditor.UIElements;
-using UnityEditor;
-using UnityEngine;
 
-namespace GraphProcessor
-{
-	public class ExposedParameterPropertyView : VisualElement
-	{
-		protected BaseGraphView baseGraphView;
+namespace GraphProcessor {
+public class ExposedParameterPropertyView : VisualElement {
+    protected BaseGraphView baseGraphView;
 
-		public ExposedParameter parameter { get; private set; }
+    public ExposedParameterPropertyView(BaseGraphView graphView, ExposedParameter param) {
+        baseGraphView = graphView;
+        parameter = param;
 
-		public Toggle     hideInInspector { get; private set; }
+        var field = graphView.exposedParameterFactory.GetParameterSettingsField(param,
+            newValue => { param.settings = newValue as ExposedParameter.Settings; });
 
-		public ExposedParameterPropertyView(BaseGraphView graphView, ExposedParameter param)
-		{
-			baseGraphView = graphView;
-			parameter      = param;
+        Add(field);
+    }
 
-			var field = graphView.exposedParameterFactory.GetParameterSettingsField(param, (newValue) => {
-				param.settings = newValue as ExposedParameter.Settings;
-			});
+    public ExposedParameter parameter { get; private set; }
 
-			Add(field);
-		}
-	}
-} 
+    public Toggle hideInInspector { get; private set; }
+}
+}

@@ -1,21 +1,15 @@
 using System;
-using UnityEngine;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Linq.Expressions;
+using System.Reflection;
+using UnityEngine;
 
 namespace GraphProcessor {
 public delegate void CustomPortIODelegate(BaseNode node, List<SerializableEdge> edges, NodePort outputPort = null);
 
 public static class CustomPortIO {
-    private class PortIOPerField : Dictionary<string, CustomPortIODelegate> {
-    }
-
-    private class PortIOPerNode : Dictionary<Type, PortIOPerField> {
-    }
-
-    private static Dictionary<Type, List<Type>> assignableTypes = new();
-    private static PortIOPerNode customIOPortMethods = new();
+    private static readonly Dictionary<Type, List<Type>> assignableTypes = new();
+    private static readonly PortIOPerNode customIOPortMethods = new();
 
     static CustomPortIO() {
         LoadCustomPortMethods();
@@ -41,7 +35,7 @@ public static class CustomPortIO {
 
                 var p = method.GetParameters();
                 // Check if the function can take a NodePort in optional param
-                bool nodePortSignature = p.Length == 2 && p[1].ParameterType == typeof(NodePort);
+                var nodePortSignature = p.Length == 2 && p[1].ParameterType == typeof(NodePort);
 
                 CustomPortIODelegate deleg;
 #if ENABLE_IL2CPP
@@ -118,6 +112,12 @@ public static class CustomPortIO {
 
     public static bool IsAssignable(Type input, Type output) {
         return assignableTypes.TryGetValue(input, out var types) && types.Contains(output);
+    }
+
+    private class PortIOPerField : Dictionary<string, CustomPortIODelegate> {
+    }
+
+    private class PortIOPerNode : Dictionary<Type, PortIOPerField> {
     }
 }
 }

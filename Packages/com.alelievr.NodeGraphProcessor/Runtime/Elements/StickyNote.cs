@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace GraphProcessor {
 /// <summary>
-/// Serializable Sticky node class
+///     Serializable Sticky node class
 /// </summary>
 [Serializable]
 public class StickyNote {

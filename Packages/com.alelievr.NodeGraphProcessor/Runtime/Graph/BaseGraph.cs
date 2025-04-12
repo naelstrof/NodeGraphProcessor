@@ -1,28 +1,28 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using System;
-using UnityEngine.Serialization;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
+using Object = UnityEngine.Object;
 
 namespace GraphProcessor {
 public class GraphChanges {
-    public SerializableEdge removedEdge;
     public SerializableEdge addedEdge;
-    public BaseNode removedNode;
-    public BaseNode addedNode;
-    public BaseNode nodeChanged;
     public Group addedGroups;
-    public Group removedGroups;
+    public BaseNode addedNode;
     public BaseStackNode addedStackNode;
-    public BaseStackNode removedStackNode;
     public StickyNote addedStickyNotes;
+    public BaseNode nodeChanged;
+    public SerializableEdge removedEdge;
+    public Group removedGroups;
+    public BaseNode removedNode;
+    public BaseStackNode removedStackNode;
     public StickyNote removedStickyNotes;
 }
 
 /// <summary>
-/// Compute order type used to determine the compute order integer on the nodes
+///     Compute order type used to determine the compute order integer on the nodes
 /// </summary>
 public enum ComputeOrderType {
     DepthFirst,
@@ -40,7 +40,7 @@ public class BaseGraph : ScriptableObject, ISerializationCallbackReceiver {
     public static readonly int invalidComputeOrder = -1;
 
     /// <summary>
-    /// Json list of serialized nodes only used for copy pasting in the editor. Note that this field isn't serialized
+    ///     Json list of serialized nodes only used for copy pasting in the editor. Note that this field isn't serialized
     /// </summary>
     /// <typeparam name="JsonElement"></typeparam>
     /// <returns></returns>
@@ -48,37 +48,21 @@ public class BaseGraph : ScriptableObject, ISerializationCallbackReceiver {
     public List<JsonElement> serializedNodes = new();
 
     /// <summary>
-    /// List of all the nodes in the graph.
+    ///     List of all the nodes in the graph.
     /// </summary>
     /// <typeparam name="BaseNode"></typeparam>
     /// <returns></returns>
     [SerializeReference] public List<BaseNode> nodes = new();
 
     /// <summary>
-    /// Dictionary to access node per GUID, faster than a search in a list
-    /// </summary>
-    /// <typeparam name="string"></typeparam>
-    /// <typeparam name="BaseNode"></typeparam>
-    /// <returns></returns>
-    [NonSerialized] public Dictionary<string, BaseNode> nodesPerGUID = new();
-
-    /// <summary>
-    /// Json list of edges
+    ///     Json list of edges
     /// </summary>
     /// <typeparam name="SerializableEdge"></typeparam>
     /// <returns></returns>
     [SerializeField] public List<SerializableEdge> edges = new();
 
     /// <summary>
-    /// Dictionary of edges per GUID, faster than a search in a list
-    /// </summary>
-    /// <typeparam name="string"></typeparam>
-    /// <typeparam name="SerializableEdge"></typeparam>
-    /// <returns></returns>
-    [NonSerialized] public Dictionary<string, SerializableEdge> edgesPerGUID = new();
-
-    /// <summary>
-    /// All groups in the graph
+    ///     All groups in the graph
     /// </summary>
     /// <typeparam name="Group"></typeparam>
     /// <returns></returns>
@@ -86,7 +70,7 @@ public class BaseGraph : ScriptableObject, ISerializationCallbackReceiver {
     public List<Group> groups = new();
 
     /// <summary>
-    /// All Stack Nodes in the graph
+    ///     All Stack Nodes in the graph
     /// </summary>
     /// <typeparam name="stackNodes"></typeparam>
     /// <returns></returns>
@@ -94,14 +78,14 @@ public class BaseGraph : ScriptableObject, ISerializationCallbackReceiver {
     public List<BaseStackNode> stackNodes = new();
 
     /// <summary>
-    /// All pinned elements in the graph
+    ///     All pinned elements in the graph
     /// </summary>
     /// <typeparam name="PinnedElement"></typeparam>
     /// <returns></returns>
     [SerializeField] public List<PinnedElement> pinnedElements = new();
 
     /// <summary>
-    /// All exposed parameters in the graph
+    ///     All exposed parameters in the graph
     /// </summary>
     /// <typeparam name="ExposedParameter"></typeparam>
     /// <returns></returns>
@@ -112,41 +96,36 @@ public class BaseGraph : ScriptableObject, ISerializationCallbackReceiver {
 
     [SerializeField] public List<StickyNote> stickyNotes = new();
 
-    [NonSerialized] private Dictionary<BaseNode, int> computeOrderDictionary = new();
-
-    [NonSerialized] private Scene linkedScene;
-
     // Trick to keep the node inspector alive during the editor session
-    [SerializeField] internal UnityEngine.Object nodeInspectorReference;
+    [SerializeField] internal Object nodeInspectorReference;
 
     //graph visual properties
     public Vector3 position = Vector3.zero;
     public Vector3 scale = Vector3.one;
 
-    /// <summary>
-    /// Triggered when something is changed in the list of exposed parameters
-    /// </summary>
-    public event Action onExposedParameterListChanged;
+    [NonSerialized] private bool _isEnabled;
 
-    public event Action<ExposedParameter> onExposedParameterModified;
-    public event Action<ExposedParameter> onExposedParameterValueChanged;
+    [NonSerialized] private Dictionary<BaseNode, int> computeOrderDictionary = new();
 
     /// <summary>
-    /// Triggered when the graph is linked to an active scene.
+    ///     Dictionary of edges per GUID, faster than a search in a list
     /// </summary>
-    public event Action<Scene> onSceneLinked;
+    /// <typeparam name="string"></typeparam>
+    /// <typeparam name="SerializableEdge"></typeparam>
+    /// <returns></returns>
+    [NonSerialized] public Dictionary<string, SerializableEdge> edgesPerGUID = new();
+
+    private HashSet<BaseNode> infiniteLoopTracker = new();
+
+    [NonSerialized] private Scene linkedScene;
 
     /// <summary>
-    /// Triggered when the graph is enabled
+    ///     Dictionary to access node per GUID, faster than a search in a list
     /// </summary>
-    public event Action onEnabled;
-
-    /// <summary>
-    /// Triggered when the graph is changed
-    /// </summary>
-    public event Action<GraphChanges> onGraphChanges;
-
-    [NonSerialized] private bool _isEnabled = false;
+    /// <typeparam name="string"></typeparam>
+    /// <typeparam name="BaseNode"></typeparam>
+    /// <returns></returns>
+    [NonSerialized] public Dictionary<string, BaseNode> nodesPerGUID = new();
 
     public bool isEnabled {
         get => _isEnabled;
@@ -166,6 +145,44 @@ public class BaseGraph : ScriptableObject, ISerializationCallbackReceiver {
         isEnabled = true;
         onEnabled?.Invoke();
     }
+
+    protected virtual void OnDisable() {
+        isEnabled = false;
+        foreach (var node in nodes)
+            node.DisableInternal();
+    }
+
+    public void OnBeforeSerialize() {
+        // Cleanup broken elements
+        stackNodes.RemoveAll(s => s == null);
+        nodes.RemoveAll(n => n == null);
+    }
+
+    public void OnAfterDeserialize() {
+    }
+
+    /// <summary>
+    ///     Triggered when something is changed in the list of exposed parameters
+    /// </summary>
+    public event Action onExposedParameterListChanged;
+
+    public event Action<ExposedParameter> onExposedParameterModified;
+    public event Action<ExposedParameter> onExposedParameterValueChanged;
+
+    /// <summary>
+    ///     Triggered when the graph is linked to an active scene.
+    /// </summary>
+    public event Action<Scene> onSceneLinked;
+
+    /// <summary>
+    ///     Triggered when the graph is enabled
+    /// </summary>
+    public event Action onEnabled;
+
+    /// <summary>
+    ///     Triggered when the graph is changed
+    /// </summary>
+    public event Action<GraphChanges> onGraphChanges;
 
     private void InitializeGraphElements() {
         // Sanitize the element lists (it's possible that nodes are null if their full class name have changed)
@@ -194,17 +211,11 @@ public class BaseGraph : ScriptableObject, ISerializationCallbackReceiver {
         }
     }
 
-    protected virtual void OnDisable() {
-        isEnabled = false;
-        foreach (var node in nodes)
-            node.DisableInternal();
-    }
-
     public virtual void OnAssetDeleted() {
     }
 
     /// <summary>
-    /// Adds a node to the graph
+    ///     Adds a node to the graph
     /// </summary>
     /// <param name="node"></param>
     /// <returns></returns>
@@ -220,7 +231,7 @@ public class BaseGraph : ScriptableObject, ISerializationCallbackReceiver {
     }
 
     /// <summary>
-    /// Removes a node from the graph
+    ///     Removes a node from the graph
     /// </summary>
     /// <param name="node"></param>
     public void RemoveNode(BaseNode node) {
@@ -235,7 +246,7 @@ public class BaseGraph : ScriptableObject, ISerializationCallbackReceiver {
     }
 
     /// <summary>
-    /// Connect two ports with an edge
+    ///     Connect two ports with an edge
     /// </summary>
     /// <param name="inputPort">input port</param>
     /// <param name="outputPort">output port</param>
@@ -268,7 +279,7 @@ public class BaseGraph : ScriptableObject, ISerializationCallbackReceiver {
     }
 
     /// <summary>
-    /// Disconnect two ports
+    ///     Disconnect two ports
     /// </summary>
     /// <param name="inputNode">input node</param>
     /// <param name="inputFieldName">input field name</param>
@@ -292,7 +303,7 @@ public class BaseGraph : ScriptableObject, ISerializationCallbackReceiver {
     }
 
     /// <summary>
-    /// Disconnect an edge
+    ///     Disconnect an edge
     /// </summary>
     /// <param name="edge"></param>
     public void Disconnect(SerializableEdge edge) {
@@ -300,7 +311,7 @@ public class BaseGraph : ScriptableObject, ISerializationCallbackReceiver {
     }
 
     /// <summary>
-    /// Disconnect an edge
+    ///     Disconnect an edge
     /// </summary>
     /// <param name="edgeGUID"></param>
     public void Disconnect(string edgeGUID) {
@@ -322,7 +333,7 @@ public class BaseGraph : ScriptableObject, ISerializationCallbackReceiver {
     }
 
     /// <summary>
-    /// Add a group
+    ///     Add a group
     /// </summary>
     /// <param name="block"></param>
     public void AddGroup(Group block) {
@@ -331,7 +342,7 @@ public class BaseGraph : ScriptableObject, ISerializationCallbackReceiver {
     }
 
     /// <summary>
-    /// Removes a group
+    ///     Removes a group
     /// </summary>
     /// <param name="block"></param>
     public void RemoveGroup(Group block) {
@@ -340,7 +351,7 @@ public class BaseGraph : ScriptableObject, ISerializationCallbackReceiver {
     }
 
     /// <summary>
-    /// Add a StackNode
+    ///     Add a StackNode
     /// </summary>
     /// <param name="stackNode"></param>
     public void AddStackNode(BaseStackNode stackNode) {
@@ -349,7 +360,7 @@ public class BaseGraph : ScriptableObject, ISerializationCallbackReceiver {
     }
 
     /// <summary>
-    /// Remove a StackNode
+    ///     Remove a StackNode
     /// </summary>
     /// <param name="stackNode"></param>
     public void RemoveStackNode(BaseStackNode stackNode) {
@@ -358,7 +369,7 @@ public class BaseGraph : ScriptableObject, ISerializationCallbackReceiver {
     }
 
     /// <summary>
-    /// Add a sticky note 
+    ///     Add a sticky note
     /// </summary>
     /// <param name="note"></param>
     public void AddStickyNote(StickyNote note) {
@@ -367,7 +378,7 @@ public class BaseGraph : ScriptableObject, ISerializationCallbackReceiver {
     }
 
     /// <summary>
-    /// Removes a sticky note 
+    ///     Removes a sticky note
     /// </summary>
     /// <param name="note"></param>
     public void RemoveStickyNote(StickyNote note) {
@@ -376,7 +387,7 @@ public class BaseGraph : ScriptableObject, ISerializationCallbackReceiver {
     }
 
     /// <summary>
-    /// Invoke the onGraphChanges event, can be used as trigger to execute the graph when the content of a node is changed 
+    ///     Invoke the onGraphChanges event, can be used as trigger to execute the graph when the content of a node is changed
     /// </summary>
     /// <param name="node"></param>
     public void NotifyNodeChanged(BaseNode node) {
@@ -384,7 +395,7 @@ public class BaseGraph : ScriptableObject, ISerializationCallbackReceiver {
     }
 
     /// <summary>
-    /// Open a pinned element of type viewType
+    ///     Open a pinned element of type viewType
     /// </summary>
     /// <param name="viewType">type of the pinned element</param>
     /// <returns>the pinned element</returns>
@@ -402,19 +413,13 @@ public class BaseGraph : ScriptableObject, ISerializationCallbackReceiver {
     }
 
     /// <summary>
-    /// Closes a pinned element of type viewType
+    ///     Closes a pinned element of type viewType
     /// </summary>
     /// <param name="viewType">type of the pinned element</param>
     public void ClosePinned(Type viewType) {
         var pinned = pinnedElements.Find(p => p.editorType.type == viewType);
 
         pinned.opened = false;
-    }
-
-    public void OnBeforeSerialize() {
-        // Cleanup broken elements
-        stackNodes.RemoveAll(s => s == null);
-        nodes.RemoveAll(n => n == null);
     }
 
     // We can deserialize data here because it's called in a unity context
@@ -436,7 +441,7 @@ public class BaseGraph : ScriptableObject, ISerializationCallbackReceiver {
         if (serializedNodes.Count > 0) {
             nodes.Clear();
             foreach (var serializedNode in serializedNodes.ToList()) {
-                var node = JsonSerializer.DeserializeNode(serializedNode) as BaseNode;
+                var node = JsonSerializer.DeserializeNode(serializedNode);
                 if (node != null)
                     nodes.Add(node);
             }
@@ -452,23 +457,18 @@ public class BaseGraph : ScriptableObject, ISerializationCallbackReceiver {
 
                 var newParam = param.Migrate();
 
-                if (newParam == null) {
+                if (newParam == null)
                     Debug.LogError(
                         $"Can't migrate parameter of type {param.type}, please create an Exposed Parameter class that implements this type.");
-                    continue;
-                } else {
+                else
                     exposedParameters.Add(newParam);
-                }
             }
         }
 #pragma warning restore CS0618
     }
 
-    public void OnAfterDeserialize() {
-    }
-
     /// <summary>
-    /// Update the compute order of the nodes in the graph
+    ///     Update the compute order of the nodes in the graph
     /// </summary>
     /// <param name="type">Compute order type</param>
     public void UpdateComputeOrder(ComputeOrderType type = ComputeOrderType.DepthFirst) {
@@ -499,7 +499,7 @@ public class BaseGraph : ScriptableObject, ISerializationCallbackReceiver {
     }
 
     /// <summary>
-    /// Add an exposed parameter
+    ///     Add an exposed parameter
     /// </summary>
     /// <param name="name">parameter name</param>
     /// <param name="type">parameter type (must be a subclass of ExposedParameter)</param>
@@ -524,7 +524,7 @@ public class BaseGraph : ScriptableObject, ISerializationCallbackReceiver {
     }
 
     /// <summary>
-    /// Add an already allocated / initialized parameter to the graph
+    ///     Add an already allocated / initialized parameter to the graph
     /// </summary>
     /// <param name="parameter">The parameter to add</param>
     /// <returns>The unique id of the parameter</returns>
@@ -540,7 +540,7 @@ public class BaseGraph : ScriptableObject, ISerializationCallbackReceiver {
     }
 
     /// <summary>
-    /// Remove an exposed parameter
+    ///     Remove an exposed parameter
     /// </summary>
     /// <param name="ep">the parameter to remove</param>
     public void RemoveExposedParameter(ExposedParameter ep) {
@@ -550,7 +550,7 @@ public class BaseGraph : ScriptableObject, ISerializationCallbackReceiver {
     }
 
     /// <summary>
-    /// Remove an exposed parameter
+    ///     Remove an exposed parameter
     /// </summary>
     /// <param name="guid">GUID of the parameter</param>
     public void RemoveExposedParameter(string guid) {
@@ -563,7 +563,7 @@ public class BaseGraph : ScriptableObject, ISerializationCallbackReceiver {
     }
 
     /// <summary>
-    /// Update an exposed parameter value
+    ///     Update an exposed parameter value
     /// </summary>
     /// <param name="guid">GUID of the parameter</param>
     /// <param name="value">new value</param>
@@ -581,7 +581,7 @@ public class BaseGraph : ScriptableObject, ISerializationCallbackReceiver {
     }
 
     /// <summary>
-    /// Update the exposed parameter name
+    ///     Update the exposed parameter name
     /// </summary>
     /// <param name="parameter">The parameter</param>
     /// <param name="name">new name</param>
@@ -591,7 +591,7 @@ public class BaseGraph : ScriptableObject, ISerializationCallbackReceiver {
     }
 
     /// <summary>
-    /// Update parameter visibility
+    ///     Update parameter visibility
     /// </summary>
     /// <param name="parameter">The parameter</param>
     /// <param name="isHidden">is Hidden</param>
@@ -604,17 +604,15 @@ public class BaseGraph : ScriptableObject, ISerializationCallbackReceiver {
     }
 
     /// <summary>
-    /// Get the exposed parameter from name
+    ///     Get the exposed parameter from name
     /// </summary>
     /// <param name="parameterName">name</param>
     /// <returns>the parameter or null</returns>
     public ExposedParameter GetExposedParameter(string parameterName) {
         var count = exposedParameters.Count;
-        for (int i = 0; i < count; i++) {
+        for (var i = 0; i < count; i++) {
             var parameter = exposedParameters[i];
-            if (parameter.name != parameterName) {
-                continue;
-            }
+            if (parameter.name != parameterName) continue;
             return parameter;
         }
 
@@ -622,60 +620,57 @@ public class BaseGraph : ScriptableObject, ISerializationCallbackReceiver {
     }
 
     /// <summary>
-    /// Get exposed parameter from GUID
+    ///     Get exposed parameter from GUID
     /// </summary>
     /// <param name="guid">GUID of the parameter</param>
     /// <returns>The parameter</returns>
     public ExposedParameter GetExposedParameterFromGUID(string guid) {
         var count = exposedParameters.Count;
-        for (int i = 0; i < count; i++) {
+        for (var i = 0; i < count; i++) {
             var parameter = exposedParameters[i];
-            if (parameter.guid != guid) {
-                continue;
-            }
+            if (parameter.guid != guid) continue;
             return parameter;
         }
+
         return null;
     }
 
     /// <summary>
-    /// Set parameter value from name. (Warning: the parameter name can be changed by the user)
+    ///     Set parameter value from name. (Warning: the parameter name can be changed by the user)
     /// </summary>
     /// <param name="parameterName">name of the parameter</param>
     /// <param name="value">new value</param>
     /// <returns>true if the value have been assigned</returns>
     public bool SetParameterValue(string parameterName, object value) {
         var count = exposedParameters.Count;
-        for (int i = 0; i < count; i++) {
+        for (var i = 0; i < count; i++) {
             var parameter = exposedParameters[i];
-            if (parameter.name != parameterName) {
-                continue;
-            }
+            if (parameter.name != parameterName) continue;
             parameter.value = value;
             return true;
         }
+
         return false;
     }
 
     /// <summary>
-    /// Get the parameter value
+    ///     Get the parameter value
     /// </summary>
     /// <param name="parameterName">parameter name</param>
     /// <returns>value</returns>
     public object GetParameterValue(string parameterName) {
         var count = exposedParameters.Count;
-        for (int i = 0; i < count; i++) {
+        for (var i = 0; i < count; i++) {
             var parameter = exposedParameters[i];
-            if (parameter.name != parameterName) {
-                continue;
-            }
+            if (parameter.name != parameterName) continue;
             return parameter.value;
         }
+
         return null;
     }
 
     /// <summary>
-    /// Get the parameter value template
+    ///     Get the parameter value template
     /// </summary>
     /// <param name="name">parameter name</param>
     /// <typeparam name="T">type of the parameter</typeparam>
@@ -685,7 +680,7 @@ public class BaseGraph : ScriptableObject, ISerializationCallbackReceiver {
     }
 
     /// <summary>
-    /// Link the current graph to the scene in parameter, allowing the graph to pick and serialize objects from the scene.
+    ///     Link the current graph to the scene in parameter, allowing the graph to pick and serialize objects from the scene.
     /// </summary>
     /// <param name="scene">Target scene to link</param>
     public void LinkToScene(Scene scene) {
@@ -694,20 +689,18 @@ public class BaseGraph : ScriptableObject, ISerializationCallbackReceiver {
     }
 
     /// <summary>
-    /// Return true when the graph is linked to a scene, false otherwise.
+    ///     Return true when the graph is linked to a scene, false otherwise.
     /// </summary>
     public bool IsLinkedToScene() {
         return linkedScene.IsValid();
     }
 
     /// <summary>
-    /// Get the linked scene. If there is no linked scene, it returns an invalid scene
+    ///     Get the linked scene. If there is no linked scene, it returns an invalid scene
     /// </summary>
     public Scene GetLinkedScene() {
         return linkedScene;
     }
-
-    private HashSet<BaseNode> infiniteLoopTracker = new();
 
     private int UpdateComputeOrderBreadthFirst(int depth, BaseNode node) {
         var computeOrder = 0;
@@ -752,7 +745,7 @@ public class BaseGraph : ScriptableObject, ISerializationCallbackReceiver {
     private void UpdateComputeOrderDepthFirst() {
         var dfs = new Stack<BaseNode>();
 
-        GraphUtils.FindCyclesInGraph(this, (n) => { PropagateComputeOrder(n, loopComputeOrder); });
+        GraphUtils.FindCyclesInGraph(this, n => { PropagateComputeOrder(n, loopComputeOrder); });
 
         var computeOrder = 0;
         foreach (var node in GraphUtils.DepthFirstSort(this)) {
@@ -792,7 +785,7 @@ public class BaseGraph : ScriptableObject, ISerializationCallbackReceiver {
     }
 
     /// <summary>
-    /// Tell if two types can be connected in the context of a graph
+    ///     Tell if two types can be connected in the context of a graph
     /// </summary>
     /// <param name="t1"></param>
     /// <param name="t2"></param>

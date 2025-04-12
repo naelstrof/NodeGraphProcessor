@@ -1,27 +1,23 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using GraphProcessor;
-using System.Linq;
-using System;
 
 namespace GraphProcessor {
 [Serializable]
 public class ParameterNode : BaseNode {
+    // We serialize the GUID of the exposed parameter in the graph so we can retrieve the true ExposedParameter from the graph
+    [SerializeField] [HideInInspector] public string parameterGUID;
+
+    public ParameterAccessor accessor;
     [Input] public object input;
 
     [Output] public object output;
 
     public override string name => "Parameter";
 
-    // We serialize the GUID of the exposed parameter in the graph so we can retrieve the true ExposedParameter from the graph
-    [SerializeField] [HideInInspector] public string parameterGUID;
-
     public ExposedParameter parameter { get; private set; }
 
     public event Action onParameterChanged;
-
-    public ParameterAccessor accessor;
 
     protected override void Enable() {
         // load the parameter

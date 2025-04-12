@@ -108,8 +108,8 @@ MonoBehaviour:
   serializedParameterList: []
   stickyNotes: []
   nodeInspectorReference: {fileID: 0}
-  position: {x: 701, y: 153, z: 0}
-  scale: {x: 0.375937, y: 0.375937, z: 1}
+  position: {x: 565, y: 35, z: 0}
+  scale: {x: 0.7561437, y: 0.7561437, z: 1}
   references:
     version: 2
     RefIds:
@@ -129,7 +129,7 @@ MonoBehaviour:
         debug: 0
         nodeLock: 0
         input:
-          position: {x: 0, y: 0.47, z: 0}
+          position: {x: 0, y: 0, z: 0}
           distance: 1
           fov: 65
           screenPoint: {x: 0.5, y: 0.5}
@@ -156,7 +156,7 @@ MonoBehaviour:
         screenOffset: {x: 0.5, y: 0.5}
         desiredDistanceFromPivot: 1
         fov: 65
-        rotation: {x: 0, y: 0, z: 0, w: 0}
+        rotation: {x: 0, y: 0.036120452, z: 0, w: 0.99934745}
         cullingMask:
           serializedVersion: 2
           m_Bits: 4294967295
@@ -202,9 +202,9 @@ MonoBehaviour:
           cullingMask:
             serializedVersion: 2
             m_Bits: 4294967295
-        blend: 0.47
+        blend: -0.09
         output:
-          position: {x: 0, y: 0.47, z: 0}
+          position: {x: 0, y: 0, z: 0}
           distance: 1
           fov: 65
           screenPoint: {x: 0.5, y: 0.5}
@@ -257,7 +257,7 @@ MonoBehaviour:
         input: 1
         settings:
           rid: 7165158009866027014
-        val: 0.47
+        val: -0.09
     - rid: 7165158009866027014
       type: {class: FloatParameter/FloatSettings, ns: GraphProcessor, asm: com.alelievr.NodeGraphProcessor.Runtime}
       data:

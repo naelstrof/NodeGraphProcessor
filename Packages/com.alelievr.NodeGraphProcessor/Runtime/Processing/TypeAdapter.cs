@@ -1,14 +1,13 @@
-using UnityEngine;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Linq;
+using UnityEngine;
 
 namespace GraphProcessor {
 /// <summary>
-/// Implement this interface to use the inside your class to define type convertions to use inside the graph.
-/// Example:
-/// <code>
+///     Implement this interface to use the inside your class to define type convertions to use inside the graph.
+///     Example:
+///     <code>
 /// public class CustomConvertions : ITypeAdapter
 /// {
 ///     public static Vector4 ConvertFloatToVector(float from) => new Vector4(from, from, from, from);
@@ -24,11 +23,11 @@ public abstract class ITypeAdapter // TODO: turn this back into an interface whe
 }
 
 public static class TypeAdapter {
-    private static Dictionary<(Type from, Type to), Func<object, object>> adapters = new();
-    private static Dictionary<(Type from, Type to), MethodInfo> adapterMethods = new();
-    private static List<(Type from, Type to)> incompatibleTypes = new();
+    private static readonly Dictionary<(Type from, Type to), Func<object, object>> adapters = new();
+    private static readonly Dictionary<(Type from, Type to), MethodInfo> adapterMethods = new();
+    private static readonly List<(Type from, Type to)> incompatibleTypes = new();
 
-    [NonSerialized] private static bool adaptersLoaded = false;
+    [NonSerialized] private static bool adaptersLoaded;
 
 #if !ENABLE_IL2CPP
     private static Func<object, object> ConvertTypeMethodHelper<TParam, TReturn>(MethodInfo method) {
@@ -37,7 +36,7 @@ public static class TypeAdapter {
             (typeof(Func<TParam, TReturn>), method);
 
         // Now create a more weakly typed delegate which will call the strongly typed one
-        Func<object, object> ret = (object param) => func((TParam)param);
+        Func<object, object> ret = param => func((TParam)param);
         return ret;
     }
 #endif
@@ -106,12 +105,11 @@ public static class TypeAdapter {
 
     public static bool AreIncompatible(Type from, Type to) {
         var count = incompatibleTypes.Count;
-        for (int i = 0; i < count; i++) {
+        for (var i = 0; i < count; i++) {
             var type = incompatibleTypes[i];
-            if (type.from == from && type.to == to) {
-                return true;
-            }
+            if (type.from == from && type.to == to) return true;
         }
+
         return false;
     }
 

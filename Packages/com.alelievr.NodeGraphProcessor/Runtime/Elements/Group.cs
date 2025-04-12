@@ -1,12 +1,12 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace GraphProcessor {
 /// <summary>
-/// Group the selected node when created
+///     Group the selected node when created
 /// </summary>
-[System.Serializable]
+[Serializable]
 public class Group {
     public string title;
     public Color color = new(0, 0, 0, 0.3f);
@@ -14,7 +14,7 @@ public class Group {
     public Vector2 size;
 
     /// <summary>
-    /// Store the GUIDs of the node in the group
+    ///     Store the GUIDs of the node in the group
     /// </summary>
     /// <typeparam name="string">GUID of a node</typeparam>
     /// <returns></returns>
@@ -25,7 +25,7 @@ public class Group {
     }
 
     /// <summary>
-    /// Create a new group with a title and a position
+    ///     Create a new group with a title and a position
     /// </summary>
     /// <param name="title"></param>
     /// <param name="position"></param>
@@ -35,7 +35,7 @@ public class Group {
     }
 
     /// <summary>
-    /// Called when the Group is created
+    ///     Called when the Group is created
     /// </summary>
     public virtual void OnCreated() {
         size = new Vector2(400, 200);

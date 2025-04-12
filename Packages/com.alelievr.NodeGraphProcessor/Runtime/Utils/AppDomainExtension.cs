@@ -1,6 +1,5 @@
-using System.Collections.Generic;
-using System.Collections;
 using System;
+using System.Collections.Generic;
 
 namespace GraphProcessor {
 public static class AppDomainExtension {

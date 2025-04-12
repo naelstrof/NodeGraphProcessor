@@ -1,50 +1,50 @@
 // #define DEBUG_LAMBDA
 
-using System.Linq;
-using System.Collections.Generic;
-using System.Collections;
-using UnityEngine;
-using System.Reflection;
-using System.Linq.Expressions;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
+using UnityEngine;
 
 namespace GraphProcessor {
 /// <summary>
-/// Class that describe port attributes for it's creation
+///     Class that describe port attributes for it's creation
 /// </summary>
 public class PortData : IEquatable<PortData> {
     /// <summary>
-    /// Unique identifier for the port
-    /// </summary>
-    public string identifier;
-
-    /// <summary>
-    /// Display name on the node
-    /// </summary>
-    public string displayName;
-
-    /// <summary>
-    /// The type that will be used for coloring with the type stylesheet
-    /// </summary>
-    public Type displayType;
-
-    /// <summary>
-    /// If the port accept multiple connection
+    ///     If the port accept multiple connection
     /// </summary>
     public bool acceptMultipleEdges;
 
     /// <summary>
-    /// Port size, will also affect the size of the connected edge
+    ///     Display name on the node
+    /// </summary>
+    public string displayName;
+
+    /// <summary>
+    ///     The type that will be used for coloring with the type stylesheet
+    /// </summary>
+    public Type displayType;
+
+    /// <summary>
+    ///     Unique identifier for the port
+    /// </summary>
+    public string identifier;
+
+    /// <summary>
+    ///     Port size, will also affect the size of the connected edge
     /// </summary>
     public int sizeInPixel;
 
     /// <summary>
-    /// Tooltip of the port
+    ///     Tooltip of the port
     /// </summary>
     public string tooltip;
 
     /// <summary>
-    /// Is the port vertical
+    ///     Is the port vertical
     /// </summary>
     public bool vertical;
 
@@ -70,51 +70,51 @@ public class PortData : IEquatable<PortData> {
 }
 
 /// <summary>
-/// Runtime class that stores all info about one port that is needed for the processing
+///     Runtime class that stores all info about one port that is needed for the processing
 /// </summary>
 public class NodePort {
     /// <summary>
-    /// The actual name of the property behind the port (must be exact, it is used for Reflection)
+    ///     Delegate that is made to send the data from this port to another port connected through an edge
+    ///     This is an optimization compared to dynamically setting values using Reflection (which is really slow)
+    ///     More info: https://codeblog.jonskeet.uk/2008/08/09/making-reflection-fly-and-exploring-delegates/
+    /// </summary>
+    public delegate void PushDataDelegate();
+
+    private readonly CustomPortIODelegate customPortIOMethod;
+
+    private readonly List<SerializableEdge> edges = new();
+    private readonly List<SerializableEdge> edgeWithRemoteCustomIO = new();
+
+    private readonly Type fieldType;
+    private readonly Dictionary<SerializableEdge, PushDataDelegate> pushDataDelegates = new();
+
+    /// <summary>
+    ///     The fieldInfo from the fieldName
+    /// </summary>
+    public FieldInfo fieldInfo;
+
+    /// <summary>
+    ///     The actual name of the property behind the port (must be exact, it is used for Reflection)
     /// </summary>
     public string fieldName;
 
     /// <summary>
-    /// The node on which the port is
+    ///     Owner of the FieldInfo, to be used in case of Get/SetValue
+    /// </summary>
+    public object fieldOwner;
+
+    /// <summary>
+    ///     The node on which the port is
     /// </summary>
     public BaseNode owner;
 
     /// <summary>
-    /// The fieldInfo from the fieldName
-    /// </summary>
-    public FieldInfo fieldInfo;
-
-    private readonly Type fieldType;
-
-    /// <summary>
-    /// Data of the port
+    ///     Data of the port
     /// </summary>
     public PortData portData;
 
-    private List<SerializableEdge> edges = new();
-    private Dictionary<SerializableEdge, PushDataDelegate> pushDataDelegates = new();
-    private List<SerializableEdge> edgeWithRemoteCustomIO = new();
-
     /// <summary>
-    /// Owner of the FieldInfo, to be used in case of Get/SetValue
-    /// </summary>
-    public object fieldOwner;
-
-    private CustomPortIODelegate customPortIOMethod;
-
-    /// <summary>
-    /// Delegate that is made to send the data from this port to another port connected through an edge
-    /// This is an optimization compared to dynamically setting values using Reflection (which is really slow)
-    /// More info: https://codeblog.jonskeet.uk/2008/08/09/making-reflection-fly-and-exploring-delegates/
-    /// </summary>
-    public delegate void PushDataDelegate();
-
-    /// <summary>
-    /// Constructor
+    ///     Constructor
     /// </summary>
     /// <param name="owner">owner node</param>
     /// <param name="fieldName">the C# property name</param>
@@ -123,7 +123,7 @@ public class NodePort {
     }
 
     /// <summary>
-    /// Constructor
+    ///     Constructor
     /// </summary>
     /// <param name="owner">owner node</param>
     /// <param name="fieldOwner"></param>
@@ -143,7 +143,7 @@ public class NodePort {
     }
 
     /// <summary>
-    /// Connect an edge to this port
+    ///     Connect an edge to this port
     /// </summary>
     /// <param name="edge"></param>
     public void Add(SerializableEdge edge) {
@@ -233,7 +233,7 @@ public class NodePort {
     }
 
     /// <summary>
-    /// Disconnect an Edge from this port
+    ///     Disconnect an Edge from this port
     /// </summary>
     /// <param name="edge"></param>
     public void Remove(SerializableEdge edge) {
@@ -246,7 +246,7 @@ public class NodePort {
     }
 
     /// <summary>
-    /// Get all the edges connected to this port
+    ///     Get all the edges connected to this port
     /// </summary>
     /// <returns></returns>
     public List<SerializableEdge> GetEdges() {
@@ -254,8 +254,8 @@ public class NodePort {
     }
 
     /// <summary>
-    /// Push the value of the port through the edges
-    /// This method can only be called on output ports
+    ///     Push the value of the port through the edges
+    ///     This method can only be called on output ports
     /// </summary>
     public void PushData() {
         if (customPortIOMethod != null) {
@@ -276,7 +276,7 @@ public class NodePort {
     }
 
     /// <summary>
-    /// Reset the value of the field to default if possible
+    ///     Reset the value of the field to default if possible
     /// </summary>
     public void ResetToDefault() {
         // Clear lists, set classes to null and struct to default value.
@@ -292,8 +292,8 @@ public class NodePort {
     }
 
     /// <summary>
-    /// Pull values from the edge (in case of a custom convertion method)
-    /// This method can only be called on input ports
+    ///     Pull values from the edge (in case of a custom convertion method)
+    ///     This method can only be called on input ports
     /// </summary>
     public void PullData() {
         if (customPortIOMethod != null) {
@@ -320,7 +320,7 @@ public class NodePort {
 }
 
 /// <summary>
-/// Container of ports and the edges connected to these ports
+///     Container of ports and the edges connected to these ports
 /// </summary>
 public abstract class NodePortContainer : List<NodePort> {
     protected BaseNode node;
@@ -330,7 +330,7 @@ public abstract class NodePortContainer : List<NodePort> {
     }
 
     /// <summary>
-    /// Remove an edge that is connected to one of the node in the container
+    ///     Remove an edge that is connected to one of the node in the container
     /// </summary>
     /// <param name="edge"></param>
     public void Remove(SerializableEdge edge) {
@@ -338,7 +338,7 @@ public abstract class NodePortContainer : List<NodePort> {
     }
 
     /// <summary>
-    /// Add an edge that is connected to one of the node in the container
+    ///     Add an edge that is connected to one of the node in the container
     /// </summary>
     /// <param name="edge"></param>
     public void Add(SerializableEdge edge) {
@@ -360,29 +360,25 @@ public abstract class NodePortContainer : List<NodePort> {
     }
 }
 
-/// <inheritdoc/>
+/// <inheritdoc />
 public class NodeInputPortContainer : NodePortContainer {
     public NodeInputPortContainer(BaseNode node) : base(node) {
     }
 
     public void PullDatas() {
         var count = Count;
-        for (int i = 0; i < count; i++) {
-            this[i].PullData();
-        }
+        for (var i = 0; i < count; i++) this[i].PullData();
     }
 }
 
-/// <inheritdoc/>
+/// <inheritdoc />
 public class NodeOutputPortContainer : NodePortContainer {
     public NodeOutputPortContainer(BaseNode node) : base(node) {
     }
 
     public void PushDatas() {
         var count = Count;
-        for (int i = 0; i < count; i++) {
-            this[i].PushData();
-        }
+        for (var i = 0; i < count; i++) this[i].PushData();
     }
 }
 }

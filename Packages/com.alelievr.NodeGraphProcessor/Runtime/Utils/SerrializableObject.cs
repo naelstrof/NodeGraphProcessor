@@ -1,20 +1,14 @@
 using System;
-using UnityEngine;
 using System.Globalization;
-
+using UnityEngine;
+using Object = UnityEngine.Object;
 #if UNITY_EDITOR
-using UnityEditor;
 #endif
 
 namespace GraphProcessor {
 // Warning: this class only support the serialization of UnityObject and primitive
 [Serializable]
 public class SerializableObject {
-    [Serializable]
-    private class ObjectWrapper {
-        public UnityEngine.Object value;
-    }
-
     public string serializedType;
     public string serializedName;
     public string serializedValue;
@@ -40,7 +34,7 @@ public class SerializableObject {
                 value = Activator.CreateInstance(type);
             else
                 value = Convert.ChangeType(serializedValue, type, CultureInfo.InvariantCulture);
-        } else if (typeof(UnityEngine.Object).IsAssignableFrom(type)) {
+        } else if (typeof(Object).IsAssignableFrom(type)) {
             var obj = new ObjectWrapper();
             JsonUtility.FromJsonOverwrite(serializedValue, obj);
             value = obj.value;
@@ -67,12 +61,12 @@ public class SerializableObject {
 
         if (value.GetType().IsPrimitive) {
             serializedValue = Convert.ToString(value, CultureInfo.InvariantCulture);
-        } else if (value is UnityEngine.Object) //type is a unity object
+        } else if (value is Object) //type is a unity object
         {
-            if (value as UnityEngine.Object == null)
+            if (value as Object == null)
                 return;
 
-            var wrapper = new ObjectWrapper { value = value as UnityEngine.Object };
+            var wrapper = new ObjectWrapper { value = value as Object };
             serializedValue = JsonUtility.ToJson(wrapper);
         } else if (value is string) {
             serializedValue = "\"" + ((string)value).Replace("\"", "\\\"") + "\"";
@@ -85,6 +79,11 @@ public class SerializableObject {
                 Debug.LogError("Can't serialize type " + serializedType);
             }
         }
+    }
+
+    [Serializable]
+    private class ObjectWrapper {
+        public Object value;
     }
 }
 }
