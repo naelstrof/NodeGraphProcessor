@@ -18,8 +18,8 @@ MonoBehaviour:
   - rid: 7165158007928520705
   - rid: 7165158007928520706
   - rid: 7165158007928520707
-  - rid: 7165158007928520708
-  - rid: 7165158007928520709
+  - rid: 7165158010547863593
+  - rid: 7165158010547863594
   edges:
   - GUID: 1b89ac1f-b6aa-4fb9-a07d-81897050e319
     owner: {fileID: 11400000}
@@ -27,14 +27,6 @@ MonoBehaviour:
     outputNodeGUID: f117a12e-732f-4a89-b9bb-8d0441c6a4e1
     inputFieldName: inputA
     outputFieldName: output
-    inputPortIdentifier: 
-    outputPortIdentifier: 
-  - GUID: ab62540e-633a-4fda-a061-f5d705948b64
-    owner: {fileID: 11400000}
-    inputNodeGUID: 9ebbd9e5-1be2-4c04-ae43-feb4157ab6e1
-    outputNodeGUID: ced3fcf6-6215-4cce-a35e-cef7f6174903
-    inputFieldName: blend
-    outputFieldName: value
     inputPortIdentifier: 
     outputPortIdentifier: 
   - GUID: d3770cfa-2b61-495e-9aaa-e03243d3f5cf
@@ -45,7 +37,23 @@ MonoBehaviour:
     outputFieldName: output
     inputPortIdentifier: 
     outputPortIdentifier: 
-  - GUID: 69c4cbd2-594c-4745-b301-fcbf71149010
+  - GUID: 28108e67-aa61-4c19-9bcc-fc0834fa3b18
+    owner: {fileID: 11400000}
+    inputNodeGUID: 59d3f202-3a06-4997-bdf8-228f3001f102
+    outputNodeGUID: 79cc7b1a-594d-46b3-8686-1509ca3f6726
+    inputFieldName: rotation
+    outputFieldName: output
+    inputPortIdentifier: 
+    outputPortIdentifier: output
+  - GUID: 7863d7e0-4818-481e-b48d-57faad212767
+    owner: {fileID: 11400000}
+    inputNodeGUID: 9ebbd9e5-1be2-4c04-ae43-feb4157ab6e1
+    outputNodeGUID: ab533867-8ac8-4978-8b8a-c8d00fc50248
+    inputFieldName: blend
+    outputFieldName: output
+    inputPortIdentifier: 
+    outputPortIdentifier: output
+  - GUID: 32db595b-55bb-434e-af4a-897100906e22
     owner: {fileID: 11400000}
     inputNodeGUID: 07bc7d7e-04c8-4d83-aaad-aa2b4a30d381
     outputNodeGUID: 9ebbd9e5-1be2-4c04-ae43-feb4157ab6e1
@@ -53,31 +61,55 @@ MonoBehaviour:
     outputFieldName: output
     inputPortIdentifier: 
     outputPortIdentifier: 
-  - GUID: c19e0427-327b-45b0-b356-1a017e35e2e6
+  - GUID: 21062481-ad76-4eb0-9ebc-ddcec7cff19c
     owner: {fileID: 11400000}
     inputNodeGUID: f117a12e-732f-4a89-b9bb-8d0441c6a4e1
-    outputNodeGUID: b57eb98a-df32-4818-b9f3-a8ed73d7e5a4
+    outputNodeGUID: 79cc7b1a-594d-46b3-8686-1509ca3f6726
     inputFieldName: rotation
-    outputFieldName: value
+    outputFieldName: output
     inputPortIdentifier: 
-    outputPortIdentifier: 
-  - GUID: 934247bd-015f-4087-8e3b-3ef6c3bd9715
-    owner: {fileID: 11400000}
-    inputNodeGUID: 59d3f202-3a06-4997-bdf8-228f3001f102
-    outputNodeGUID: b57eb98a-df32-4818-b9f3-a8ed73d7e5a4
-    inputFieldName: rotation
-    outputFieldName: value
-    inputPortIdentifier: 
-    outputPortIdentifier: 
+    outputPortIdentifier: output
   groups: []
   stackNodes: []
-  pinnedElements: []
-  exposedParameters: []
+  pinnedElements:
+  - position:
+      serializedVersion: 2
+      x: 33
+      y: 111
+      width: 150
+      height: 200
+    opened: 0
+    editorType:
+      serializedType: GraphProcessor.ProcessorView, com.alelievr.NodeGraphProcessor.Editor,
+        Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - position:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 150
+      height: 200
+    opened: 0
+    editorType:
+      serializedType: ConditionalProcessorView, Assembly-CSharp-Editor, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - position:
+      serializedVersion: 2
+      x: 5
+      y: 114
+      width: 229
+      height: 251
+    opened: 1
+    editorType:
+      serializedType: GraphProcessor.ExposedParameterView, com.alelievr.NodeGraphProcessor.Editor,
+        Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  exposedParameters:
+  - rid: 7165158009866027013
+  - rid: 7165158010547863589
   serializedParameterList: []
   stickyNotes: []
   nodeInspectorReference: {fileID: 0}
-  position: {x: 456, y: -258, z: 0}
-  scale: {x: 1, y: 1, z: 1}
+  position: {x: 701, y: 153, z: 0}
+  scale: {x: 0.375937, y: 0.375937, z: 1}
   references:
     version: 2
     RefIds:
@@ -89,19 +121,19 @@ MonoBehaviour:
         computeOrder: 5
         position:
           serializedVersion: 2
-          x: 65
-          y: 301
-          width: 100
-          height: 100
+          x: 115.4895
+          y: 315.00006
+          width: 154
+          height: 75
         expanded: 0
         debug: 0
         nodeLock: 0
         input:
-          position: {x: 0, y: 0, z: 0}
+          position: {x: 0, y: 0.47, z: 0}
           distance: 1
           fov: 65
           screenPoint: {x: 0.5, y: 0.5}
-          rotation: {x: 0, y: 0, z: 0, w: 1}
+          rotation: {x: 0, y: 0.036120452, z: 0, w: 0.99934745}
           cullingMask:
             serializedVersion: 2
             m_Bits: 4294967295
@@ -113,18 +145,18 @@ MonoBehaviour:
         computeOrder: 3
         position:
           serializedVersion: 2
-          x: -566
-          y: 166
+          x: -587.85016
+          y: 125.00001
           width: 255
           height: 190
-        expanded: 0
+        expanded: 1
         debug: 0
         nodeLock: 0
         pivotPosition: {x: 0, y: 0, z: 0}
         screenOffset: {x: 0.5, y: 0.5}
         desiredDistanceFromPivot: 1
         fov: 65
-        rotation: {x: 0, y: 0, z: 0, w: 1}
+        rotation: {x: 0, y: 0, z: 0, w: 0}
         cullingMask:
           serializedVersion: 2
           m_Bits: 4294967295
@@ -133,7 +165,7 @@ MonoBehaviour:
           distance: 1
           fov: 65
           screenPoint: {x: 0.5, y: 0.5}
-          rotation: {x: 0, y: 0, z: 0, w: 1}
+          rotation: {x: 0, y: 0.036120452, z: 0, w: 0.99934745}
           cullingMask:
             serializedVersion: 2
             m_Bits: 4294967295
@@ -157,7 +189,7 @@ MonoBehaviour:
           distance: 1
           fov: 65
           screenPoint: {x: 0.5, y: 0.5}
-          rotation: {x: 0, y: 0, z: 0, w: 1}
+          rotation: {x: 0, y: 0.036120452, z: 0, w: 0.99934745}
           cullingMask:
             serializedVersion: 2
             m_Bits: 4294967295
@@ -166,17 +198,17 @@ MonoBehaviour:
           distance: 1
           fov: 65
           screenPoint: {x: 0.5, y: 0.5}
-          rotation: {x: 0, y: 0, z: 0, w: 1}
+          rotation: {x: 0, y: 0.036120452, z: 0, w: 0.99934745}
           cullingMask:
             serializedVersion: 2
             m_Bits: 4294967295
-        blend: -1.75
+        blend: 0.47
         output:
-          position: {x: 0, y: 0, z: 0}
+          position: {x: 0, y: 0.47, z: 0}
           distance: 1
           fov: 65
           screenPoint: {x: 0.5, y: 0.5}
-          rotation: {x: 0, y: 0, z: 0, w: 1}
+          rotation: {x: 0, y: 0.036120452, z: 0, w: 0.99934745}
           cullingMask:
             serializedVersion: 2
             m_Bits: 4294967295
@@ -188,8 +220,8 @@ MonoBehaviour:
         computeOrder: 2
         position:
           serializedVersion: 2
-          x: -566
-          y: 376
+          x: -587.99994
+          y: 362.99988
           width: 255
           height: 190
         expanded: 0
@@ -199,7 +231,7 @@ MonoBehaviour:
         screenOffset: {x: 0.5, y: 0.5}
         desiredDistanceFromPivot: 1
         fov: 65
-        rotation: {x: 0, y: 0, z: 0, w: 1}
+        rotation: {x: 0, y: 0.036120452, z: 0, w: 0.99934745}
         cullingMask:
           serializedVersion: 2
           m_Bits: 4294967295
@@ -208,41 +240,84 @@ MonoBehaviour:
           distance: 1
           fov: 65
           screenPoint: {x: 0.5, y: 0.5}
-          rotation: {x: 0, y: 0, z: 0, w: 1}
+          rotation: {x: 0, y: 0.036120452, z: 0, w: 0.99934745}
           cullingMask:
             serializedVersion: 2
             m_Bits: 4294967295
-    - rid: 7165158007928520708
-      type: {class: OrbitCameraFloat, ns: , asm: com.naelstrof.orbitcam}
+    - rid: 7165158009866027013
+      type: {class: FloatParameter, ns: GraphProcessor, asm: com.alelievr.NodeGraphProcessor.Runtime}
       data:
-        nodeCustomName: 
-        GUID: ced3fcf6-6215-4cce-a35e-cef7f6174903
-        computeOrder: 0
-        position:
-          serializedVersion: 2
-          x: -310.99997
-          y: 589.55634
-          width: 151
-          height: 113
+        guid: 91266667-4bf3-4237-8331-c6a1f3050621
+        name: Blend
+        type: 
+        serializedValue:
+          serializedType: 
+          serializedName: 
+          serializedValue: 
+        input: 1
+        settings:
+          rid: 7165158009866027014
+        val: 0.47
+    - rid: 7165158009866027014
+      type: {class: FloatParameter/FloatSettings, ns: GraphProcessor, asm: com.alelievr.NodeGraphProcessor.Runtime}
+      data:
+        isHidden: 0
         expanded: 0
-        debug: 0
-        nodeLock: 0
-        parameterName: blend
-        value: -1.75
-    - rid: 7165158007928520709
-      type: {class: OrbitCameraRotation, ns: , asm: com.naelstrof.orbitcam}
+        guid: 91266667-4bf3-4237-8331-c6a1f3050621
+        mode: 0
+        min: 0
+        max: 1
+    - rid: 7165158010547863589
+      type: {class: QuaternionParameter, ns: GraphProcessor, asm: com.alelievr.NodeGraphProcessor.Runtime}
+      data:
+        guid: c37a7b39-5078-40c0-9a1d-e26ef03c8114
+        name: Rotation
+        type: 
+        serializedValue:
+          serializedType: 
+          serializedName: 
+          serializedValue: 
+        input: 1
+        settings:
+          rid: 7165158010547863590
+        val: {x: 0, y: 0.036120452, z: 0, w: 0.99934745}
+    - rid: 7165158010547863590
+      type: {class: ExposedParameter/Settings, ns: GraphProcessor, asm: com.alelievr.NodeGraphProcessor.Runtime}
+      data:
+        isHidden: 0
+        expanded: 0
+        guid: c37a7b39-5078-40c0-9a1d-e26ef03c8114
+    - rid: 7165158010547863593
+      type: {class: ParameterNode, ns: GraphProcessor, asm: com.alelievr.NodeGraphProcessor.Runtime}
       data:
         nodeCustomName: 
-        GUID: b57eb98a-df32-4818-b9f3-a8ed73d7e5a4
+        GUID: 79cc7b1a-594d-46b3-8686-1509ca3f6726
         computeOrder: 1
         position:
           serializedVersion: 2
-          x: -1029.504
-          y: 356
-          width: 181
-          height: 189
+          x: -870.41003
+          y: 376.00012
+          width: 82
+          height: 37
         expanded: 0
         debug: 0
         nodeLock: 0
-        parameterName: rot
-        value: {x: 0, y: 0, z: 0, w: 1}
+        parameterGUID: c37a7b39-5078-40c0-9a1d-e26ef03c8114
+        accessor: 0
+    - rid: 7165158010547863594
+      type: {class: ParameterNode, ns: GraphProcessor, asm: com.alelievr.NodeGraphProcessor.Runtime}
+      data:
+        nodeCustomName: 
+        GUID: ab533867-8ac8-4978-8b8a-c8d00fc50248
+        computeOrder: 0
+        position:
+          serializedVersion: 2
+          x: -265.7501
+          y: 516.15
+          width: 68
+          height: 37
+        expanded: 0
+        debug: 0
+        nodeLock: 0
+        parameterGUID: 91266667-4bf3-4237-8331-c6a1f3050621
+        accessor: 0
