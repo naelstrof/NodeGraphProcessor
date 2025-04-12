@@ -606,10 +606,19 @@ public class BaseGraph : ScriptableObject, ISerializationCallbackReceiver {
     /// <summary>
     /// Get the exposed parameter from name
     /// </summary>
-    /// <param name="name">name</param>
+    /// <param name="parameterName">name</param>
     /// <returns>the parameter or null</returns>
-    public ExposedParameter GetExposedParameter(string name) {
-        return exposedParameters.FirstOrDefault(e => e.name == name);
+    public ExposedParameter GetExposedParameter(string parameterName) {
+        var count = exposedParameters.Count;
+        for (int i = 0; i < count; i++) {
+            var parameter = exposedParameters[i];
+            if (parameter.name != parameterName) {
+                continue;
+            }
+            return parameter;
+        }
+
+        return null;
     }
 
     /// <summary>
@@ -618,33 +627,51 @@ public class BaseGraph : ScriptableObject, ISerializationCallbackReceiver {
     /// <param name="guid">GUID of the parameter</param>
     /// <returns>The parameter</returns>
     public ExposedParameter GetExposedParameterFromGUID(string guid) {
-        return exposedParameters.FirstOrDefault(e => e?.guid == guid);
+        var count = exposedParameters.Count;
+        for (int i = 0; i < count; i++) {
+            var parameter = exposedParameters[i];
+            if (parameter.guid != guid) {
+                continue;
+            }
+            return parameter;
+        }
+        return null;
     }
 
     /// <summary>
     /// Set parameter value from name. (Warning: the parameter name can be changed by the user)
     /// </summary>
-    /// <param name="name">name of the parameter</param>
+    /// <param name="parameterName">name of the parameter</param>
     /// <param name="value">new value</param>
     /// <returns>true if the value have been assigned</returns>
-    public bool SetParameterValue(string name, object value) {
-        var e = exposedParameters.FirstOrDefault(p => p.name == name);
-
-        if (e == null)
-            return false;
-
-        e.value = value;
-
-        return true;
+    public bool SetParameterValue(string parameterName, object value) {
+        var count = exposedParameters.Count;
+        for (int i = 0; i < count; i++) {
+            var parameter = exposedParameters[i];
+            if (parameter.name != parameterName) {
+                continue;
+            }
+            parameter.value = value;
+            return true;
+        }
+        return false;
     }
 
     /// <summary>
     /// Get the parameter value
     /// </summary>
-    /// <param name="name">parameter name</param>
+    /// <param name="parameterName">parameter name</param>
     /// <returns>value</returns>
-    public object GetParameterValue(string name) {
-        return exposedParameters.FirstOrDefault(p => p.name == name)?.value;
+    public object GetParameterValue(string parameterName) {
+        var count = exposedParameters.Count;
+        for (int i = 0; i < count; i++) {
+            var parameter = exposedParameters[i];
+            if (parameter.name != parameterName) {
+                continue;
+            }
+            return parameter.value;
+        }
+        return null;
     }
 
     /// <summary>
