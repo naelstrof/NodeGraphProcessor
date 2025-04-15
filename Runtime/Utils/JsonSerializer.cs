@@ -1,6 +1,8 @@
 ﻿using System;
 #if UNITY_EDITOR
 using UnityEditor;
+#else
+using UnityEngine;
 #endif
 
 // Warning, the current serialization code does not handle unity objects
@@ -25,7 +27,7 @@ public static class JsonSerializer {
 #if UNITY_EDITOR
         elem.jsonDatas = EditorJsonUtility.ToJson(obj);
 #else
-			elem.jsonDatas = JsonUtility.ToJson(obj);
+        elem.jsonDatas = JsonUtility.ToJson(obj);
 #endif
 
         return elem;
@@ -39,7 +41,7 @@ public static class JsonSerializer {
 #if UNITY_EDITOR
         EditorJsonUtility.FromJsonOverwrite(e.jsonDatas, obj);
 #else
-			JsonUtility.FromJsonOverwrite(e.jsonDatas, obj);
+        JsonUtility.FromJsonOverwrite(e.jsonDatas, obj);
 #endif
 
         return obj;
@@ -60,7 +62,7 @@ public static class JsonSerializer {
 #if UNITY_EDITOR
             EditorJsonUtility.FromJsonOverwrite(e.jsonDatas, node);
 #else
-				JsonUtility.FromJsonOverwrite(e.jsonDatas, node);
+            JsonUtility.FromJsonOverwrite(e.jsonDatas, node);
 #endif
             return node;
         } catch {
